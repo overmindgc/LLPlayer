@@ -1,5 +1,5 @@
 //
-//  ViewController.h
+//  MainNavViewController.h
 //  LLPlayer
 //
 //  Created by 辰 宫 on 03/11/2017.
@@ -8,8 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ViewController : UIViewController
-
+@interface MainNavViewController : UINavigationController
 
 @end
-
