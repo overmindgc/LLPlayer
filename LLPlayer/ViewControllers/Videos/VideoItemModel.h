@@ -6,8 +6,22 @@
 //  Copyright © 2017 GC. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 @interface VideoItemModel : NSObject
+
+@property (nonatomic, copy) NSString *path;
+@property (nonatomic, copy) NSString *name;
+@property (nonatomic, copy) NSString *type;
+@property (nonatomic, copy) NSString *size;
+@property (nonatomic, copy) NSString *totalTime;
+@property (nonatomic, copy) NSString *resolution;
+@property (nonatomic, copy) NSString *encoding;
+
+@property (nonatomic) CGSize videoSize;
+@property (nonatomic, strong) UIImage *thumbImage;
+
+@property (nonatomic) BOOL canPlay;
+@property (nonatomic) BOOL isFolder;
 
 @end

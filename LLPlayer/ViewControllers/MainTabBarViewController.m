@@ -21,7 +21,7 @@
     self.selectedIndex = 0;
     [self setTabBarItems];
 //    self.tabBar.tintColor = [AppColor appMainColor];
-    self.delegate = self;
+    self.delegate = self;    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -30,7 +30,13 @@
 }
 
 - (void)setTabBarItems {
-    CGSize indicatorImageSize =CGSizeMake(self.tabBar.bounds.size.width/3 + 10, self.tabBar.bounds.size.height);
+    CGFloat bgImageWidth = 0.0;
+    if ([[UIScreen mainScreen] bounds].size.width > [[UIScreen mainScreen] bounds].size.height) {
+        bgImageWidth = [[UIScreen mainScreen] bounds].size.height / 3;
+    } else {
+        bgImageWidth = [[UIScreen mainScreen] bounds].size.width / 3;
+    }
+    CGSize indicatorImageSize =CGSizeMake(bgImageWidth, self.tabBar.bounds.size.height);
     self.tabBar.selectionIndicatorImage = [self drawTabBarItemBackgroundUmageWithSize:indicatorImageSize];
     [self.viewControllers enumerateObjectsUsingBlock:^(__kindof UIViewController * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         [obj.tabBarItem setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIColor whiteColor],NSForegroundColorAttributeName, [UIFont systemFontOfSize:12.f],NSFontAttributeName,nil]forState:UIControlStateNormal];
@@ -64,7 +70,7 @@
     CGContextRef ctx =UIGraphicsGetCurrentContext();
     
     CGContextSetRGBFillColor(ctx,83/255.0,215/255.0,105/255.0, 1);
-    CGContextFillRect(ctx,CGRectMake(5,0, size.width, size.height));
+    CGContextFillRect(ctx,CGRectMake(0,0, size.width, size.height));
     
     
     CGRect rect =CGRectMake(0,0, size.width, size.height);

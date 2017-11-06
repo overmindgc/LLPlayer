@@ -1,0 +1,15 @@
+PODS:
+  - DZNEmptyDataSet (1.8.1)
+  - Masonry (1.1.0)
+
+DEPENDENCIES:
+  - DZNEmptyDataSet
+  - Masonry
+
+SPEC CHECKSUMS:
+  DZNEmptyDataSet: 9525833b9e68ac21c30253e1d3d7076cc828eaa7
+  Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
+
+PODFILE CHECKSUM: 3adf2584e675361258ef33fae52eb8455315cde0
+
+COCOAPODS: 1.3.1

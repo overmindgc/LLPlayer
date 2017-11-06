@@ -10,4 +10,12 @@
 
 @interface VideoTableViewCell : UITableViewCell
 
+@property (weak, nonatomic) IBOutlet UIImageView *videoImageView;
+
+@property (weak, nonatomic) IBOutlet UILabel *nameLabel;
+
+@property (weak, nonatomic) IBOutlet UILabel *propertyLabel;
+
+@property (weak, nonatomic) IBOutlet UILabel *totalTimeLabel;
+
 @end

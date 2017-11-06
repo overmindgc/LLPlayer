@@ -10,4 +10,10 @@
 
 @interface VideoPlayerViewController : UIViewController
 
+@property (nonatomic, copy) NSString *videoPath;
+
+@property (nonatomic, copy) NSString *videoName;
+
+@property (nonatomic) CGSize videoSize;
+
 @end

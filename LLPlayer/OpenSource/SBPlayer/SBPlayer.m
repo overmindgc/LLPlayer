@@ -73,6 +73,7 @@ static NSInteger count = 0;
     }
     return self;
 }
+
 -(void)assetWithURL:(NSURL *)url{
     NSDictionary *options = @{ AVURLAssetPreferPreciseDurationAndTimingKey : @YES };
     self.anAsset = [[AVURLAsset alloc]initWithURL:url options:options];
@@ -119,6 +120,7 @@ static NSInteger count = 0;
     [self setupPlayerWithAsset:self.anAsset];
 
 }
+
 -(instancetype)initWithAsset:(AVURLAsset *)asset{
     self = [super init];
     if (self) {
@@ -138,6 +140,7 @@ static NSInteger count = 0;
     //添加消息中心
     [self addNotificationCenter];
 }
+
 //FIXME: Tracking time,跟踪时间的改变
 -(void)addPeriodicTimeObserver{
     __weak typeof(self) weakSelf = self;
@@ -263,14 +266,17 @@ static NSInteger count = 0;
         case UIInterfaceOrientationPortrait:
         {
             _isFullScreen = NO;
-            [[self getCurrentVC].view addSubview:self];
+//            [[self getCurrentVC].view addSubview:self];
+            [[self getCurrentVC].view insertSubview:self atIndex:0];
             //删除UIView animate可以去除横竖屏切换过渡动画
             [UIView animateKeyframesWithDuration:kTransitionTime delay:0 options:UIViewKeyframeAnimationOptionCalculationModeLinear animations:^{
                 if (self.oldConstriants) {
                     [[self getCurrentVC].view addConstraints:self.oldConstriants];
                 }
                 [self layoutIfNeeded];
-            } completion:nil];
+            } completion:^(BOOL finished){
+                
+            }];
         }
             break;
         case UIInterfaceOrientationUnknown:
@@ -333,6 +339,7 @@ static NSInteger count = 0;
     //初始化时间
     [self initTimeLabels];
 }
+
 //初始化时间
 -(void)initTimeLabels{
     self.controlView.currentTime = @"00:00";
