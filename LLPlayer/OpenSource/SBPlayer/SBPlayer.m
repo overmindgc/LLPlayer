@@ -7,6 +7,7 @@
 //
 
 #import "SBPlayer.h"
+
 @interface SBPlayer ()
 
 @property (nonatomic,strong,readonly) AVPlayerLayer *playerLayer;
@@ -16,6 +17,11 @@
 @property (nonatomic,strong) SBControlView *controlView;
 //暂停和播放视图
 @property (nonatomic,strong) SBPauseOrPlayView *pauseOrPlayView;
+//字幕遮挡的模糊图片
+@property (nonatomic,strong) UIVisualEffectView *blurMaskView;
+//字幕遮挡开关
+@property (nonatomic,strong) UIButton *blurMaskSwitch;
+
 //原始约束
 @property (nonatomic,strong) NSArray *oldConstriants;
 //添加标题
@@ -330,10 +336,14 @@ static NSInteger count = 0;
     [self addTitle];
     //添加点击事件
     [self addGestureEvent];
+    //添加字幕遮罩
+    [self addBlurMaskView];
+    
     //添加播放和暂停按钮
     [self addPauseAndPlayBtn];
     //添加控制视图
     [self addControlView];
+    [self addBlurMaskSwitchView];
     //添加加载视图
     [self addLoadingView];
     //初始化时间
@@ -389,6 +399,30 @@ static NSInteger count = 0;
     }];
     [self layoutIfNeeded];
 }
+//添加字幕遮罩视图
+- (void)addBlurMaskView
+{
+    [self addSubview:self.blurMaskView];
+    [self.blurMaskView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self).offset(0);
+        make.right.mas_equalTo(self).offset(0);
+        make.bottom.mas_equalTo(self).offset(0);
+        make.height.mas_equalTo(@50);
+    }];
+    [self layoutIfNeeded];
+}
+- (void)addBlurMaskSwitchView
+{
+    [self addSubview:self.blurMaskSwitch];
+    [self.blurMaskSwitch mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.mas_equalTo(self).offset(-15);
+        make.bottom.mas_equalTo(self).offset(-65);
+        make.width.mas_equalTo(@40);
+        make.height.mas_equalTo(@22);
+    }];
+    [self layoutSubviews];
+}
+
 //懒加载ActivityIndicateView
 -(UIActivityIndicatorView *)activityIndeView{
     if (!_activityIndeView) {
@@ -428,11 +462,40 @@ static NSInteger count = 0;
     }
     return _controlView;
 }
+//懒加载字幕遮罩视图
+- (UIVisualEffectView *)blurMaskView
+{
+    if (!_blurMaskView) {
+        UIBlurEffect *effect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
+        _blurMaskView = [[UIVisualEffectView alloc] initWithEffect:effect];
+        _blurMaskView.layer.cornerRadius = 5.f;
+        _blurMaskView.hidden = YES;
+    }
+    return _blurMaskView;
+}
+- (UIButton *)blurMaskSwitch
+{
+    if (!_blurMaskSwitch) {
+        _blurMaskSwitch = [[UIButton alloc] init];
+        [_blurMaskSwitch setImage:[UIImage imageNamed:@"switch_off"] forState:UIControlStateNormal];
+        [_blurMaskSwitch setImage:[UIImage imageNamed:@"switch_on"] forState:UIControlStateSelected];
+        [_blurMaskSwitch addTarget:self action:@selector(blurMaskSwitchClick:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _blurMaskSwitch;
+}
+- (void)blurMaskSwitchClick:(id)sender
+{
+    UIButton *currBtn = (UIButton *)sender;
+    currBtn.selected = !currBtn.selected;
+    _blurMaskView.hidden = !_blurMaskSwitch.isSelected;
+}
+
 //设置子视图是否隐藏
 -(void)setSubViewsIsHide:(BOOL)isHide{
     self.controlView.hidden = isHide;
     self.pauseOrPlayView.hidden = isHide;
     self.titleLabel.hidden = isHide;
+    self.blurMaskSwitch.hidden = isHide;
 }
 //MARK: SBPauseOrPlayViewDeleagate
 -(void)pauseOrPlayView:(SBPauseOrPlayView *)pauseOrPlayView withState:(BOOL)state{

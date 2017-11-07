@@ -13,6 +13,7 @@
 #import "VideoItemModel.h"
 #import "VideoPlayerViewController.h"
 #import "AVUtils.h"
+#import "FileHelpers.h"
 
 static NSString * tableCellIndentifer = @"TableCellIndentifer";
 
@@ -29,7 +30,6 @@ static NSString * tableCellIndentifer = @"TableCellIndentifer";
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    
     [self.tableView registerNib:[UINib nibWithNibName:@"VideoTableViewCell" bundle:nil] forCellReuseIdentifier:tableCellIndentifer];
     
     self.dataSource = [NSMutableArray array];
@@ -118,6 +118,31 @@ static NSString * tableCellIndentifer = @"TableCellIndentifer";
         [self.navigationController pushViewController:playerVC animated:YES];
     } else {
         
+    }
+}
+
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return YES;
+}
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return UITableViewCellEditingStyleDelete;
+    
+}
+- (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath{
+    return @"Delete";
+}
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        VideoItemModel *model = [self.dataSource objectAtIndex:indexPath.row];
+        [FileHelpers deleteFileFromSandBoxWithFilePath:model.path];
+        [self searchFilesFromDocument];
+    }
+    else if (editingStyle == UITableViewCellEditingStyleInsert) {
+        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
     }
 }
 

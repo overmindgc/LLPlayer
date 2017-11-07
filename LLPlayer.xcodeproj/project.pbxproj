@@ -34,6 +34,8 @@
 		B764A1FE1FAF3D1C00B151E6 /* pause.png in Resources */ = {isa = PBXBuildFile; fileRef = B764A1F71FAF3D1B00B151E6 /* pause.png */; };
 		B764A1FF1FAF3D1C00B151E6 /* play@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B764A1F81FAF3D1C00B151E6 /* play@2x.png */; };
 		B764A2021FAFFC7400B151E6 /* AVUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = B764A2011FAFFC7400B151E6 /* AVUtils.m */; };
+		B764A21A1FB1B4E600B151E6 /* Player.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B764A2191FB1B4E600B151E6 /* Player.xcassets */; };
+		B764A21D1FB1BA5400B151E6 /* FileHelpers.m in Sources */ = {isa = PBXBuildFile; fileRef = B764A21C1FB1BA5300B151E6 /* FileHelpers.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -85,6 +87,9 @@
 		B764A2001FAFFC7400B151E6 /* AVUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AVUtils.h; sourceTree = "<group>"; };
 		B764A2011FAFFC7400B151E6 /* AVUtils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AVUtils.m; sourceTree = "<group>"; };
 		B764A2031FAFFCA000B151E6 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
+		B764A2191FB1B4E600B151E6 /* Player.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Player.xcassets; sourceTree = "<group>"; };
+		B764A21B1FB1BA5300B151E6 /* FileHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileHelpers.h; sourceTree = "<group>"; };
+		B764A21C1FB1BA5300B151E6 /* FileHelpers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileHelpers.m; sourceTree = "<group>"; };
 		E1C7C783CAC93DA4B77A5503 /* Pods-LLPlayer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LLPlayer.debug.xcconfig"; path = "Pods/Target Support Files/Pods-LLPlayer/Pods-LLPlayer.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -171,6 +176,8 @@
 		B764A1D41FAC71BD00B151E6 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				B764A21B1FB1BA5300B151E6 /* FileHelpers.h */,
+				B764A21C1FB1BA5300B151E6 /* FileHelpers.m */,
 				B764A1DE1FAEB3C600B151E6 /* Videos */,
 				B764A1E01FAEB3E500B151E6 /* Settings */,
 				B764A1DF1FAEB3DA00B151E6 /* Records */,
@@ -231,6 +238,7 @@
 				B764A1F61FAF3D1B00B151E6 /* pause@2x.png */,
 				B764A1F41FAF3D1B00B151E6 /* play.png */,
 				B764A1F81FAF3D1C00B151E6 /* play@2x.png */,
+				B764A2191FB1B4E600B151E6 /* Player.xcassets */,
 			);
 			path = Resource;
 			sourceTree = "<group>";
@@ -308,6 +316,7 @@
 				B764A1F91FAF3D1C00B151E6 /* full_screen@2x.png in Resources */,
 				B764A1FE1FAF3D1C00B151E6 /* pause.png in Resources */,
 				B76066D31FAC554600231B10 /* LaunchScreen.storyboard in Resources */,
+				B764A21A1FB1B4E600B151E6 /* Player.xcassets in Resources */,
 				B764A1FA1FAF3D1C00B151E6 /* full_screen.png in Resources */,
 				B764A1FD1FAF3D1C00B151E6 /* pause@2x.png in Resources */,
 				B764A1E51FAEBDAC00B151E6 /* VideoTableViewCell.xib in Resources */,
@@ -387,6 +396,7 @@
 				B76066D61FAC554600231B10 /* main.m in Sources */,
 				B76067131FAC57B800231B10 /* SBPauseOrPlayView.m in Sources */,
 				B764A1EB1FAEC5D300B151E6 /* DocumentWatcher.m in Sources */,
+				B764A21D1FB1BA5400B151E6 /* FileHelpers.m in Sources */,
 				B764A1D01FAC650A00B151E6 /* MainTabBarViewController.m in Sources */,
 				B764A2021FAFFC7400B151E6 /* AVUtils.m in Sources */,
 				B76066C81FAC554600231B10 /* AppDelegate.m in Sources */,
