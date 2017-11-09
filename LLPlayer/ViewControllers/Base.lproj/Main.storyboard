@@ -6,21 +6,22 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--My Records-->
+        <!--My Autios-->
         <scene sceneID="jSr-Cp-PAs">
             <objects>
-                <viewController title="My Records" id="oEy-Vs-XRX" customClass="RecordsViewController" sceneMemberID="viewController">
+                <viewController title="My Autios" id="oEy-Vs-XRX" customClass="RecordsViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="mQc-Vs-hH5">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="554"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <viewLayoutGuide key="safeArea" id="ZJ5-mb-RJ6"/>
                     </view>
-                    <tabBarItem key="tabBarItem" title="My Records" image="record_tab_unactivate" id="bJa-uc-uy6"/>
+                    <tabBarItem key="tabBarItem" title="Local Audios" image="record_tab_unactivate" id="bJa-uc-uy6"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5RI-4P-89A" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -73,11 +74,71 @@
                     <tabBarItem key="tabBarItem" title="Local Videos" image="video_tab_unactivate" id="aDr-hY-tWT"/>
                     <connections>
                         <outlet property="tableView" destination="cLp-xe-Fi4" id="7gH-UN-ebb"/>
+                        <segue destination="BvB-z9-vJQ" kind="show" identifier="showMovieView" id="Hcc-aP-GB4"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Wrk-uo-eni" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="916" y="-268.51574212893553"/>
+        </scene>
+        <!--Movie Player View Controller-->
+        <scene sceneID="y2F-Ln-fDE">
+            <objects>
+                <viewController id="BvB-z9-vJQ" customClass="MoviePlayerViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="umd-3a-34B">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="618"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tAQ-jO-8G2" userLabel="PlayerFatherView">
+                                <rect key="frame" x="0.0" y="20" width="375" height="211"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vGu-3c-lEA">
+                                        <rect key="frame" x="10" y="3" width="40" height="40"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="40" id="4TS-vN-r5R"/>
+                                            <constraint firstAttribute="height" constant="40" id="uGT-GI-drx"/>
+                                        </constraints>
+                                        <state key="normal" image="ZFPlayer_back_full.png"/>
+                                        <connections>
+                                            <action selector="backClick" destination="BvB-z9-vJQ" eventType="touchUpInside" id="nQs-Mn-Ovj"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="tAQ-jO-8G2" secondAttribute="height" multiplier="16:9" id="0cC-TL-4vD"/>
+                                    <constraint firstItem="vGu-3c-lEA" firstAttribute="top" secondItem="tAQ-jO-8G2" secondAttribute="top" constant="3" id="FlX-uo-Uju"/>
+                                    <constraint firstItem="vGu-3c-lEA" firstAttribute="leading" secondItem="tAQ-jO-8G2" secondAttribute="leading" constant="10" id="ZzY-Iq-f2e"/>
+                                </constraints>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OUc-dr-sXF" userLabel="statusbarview">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="20"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="20" id="zPJ-ds-2lC"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="LQ8-IQ-fQ4" firstAttribute="trailing" secondItem="tAQ-jO-8G2" secondAttribute="trailing" id="0Vm-70-ssg"/>
+                            <constraint firstItem="LQ8-IQ-fQ4" firstAttribute="top" secondItem="OUc-dr-sXF" secondAttribute="top" constant="20" id="GEe-r7-tYw"/>
+                            <constraint firstItem="LQ8-IQ-fQ4" firstAttribute="trailing" secondItem="OUc-dr-sXF" secondAttribute="trailing" id="L7M-TA-Qiu"/>
+                            <constraint firstItem="tAQ-jO-8G2" firstAttribute="leading" secondItem="LQ8-IQ-fQ4" secondAttribute="leading" id="PYv-cJ-ApJ"/>
+                            <constraint firstItem="tAQ-jO-8G2" firstAttribute="top" secondItem="LQ8-IQ-fQ4" secondAttribute="top" id="TAc-EE-WMR"/>
+                            <constraint firstItem="OUc-dr-sXF" firstAttribute="leading" secondItem="LQ8-IQ-fQ4" secondAttribute="leading" id="duR-wv-YLU"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="LQ8-IQ-fQ4"/>
+                    </view>
+                    <nil key="simulatedTopBarMetrics"/>
+                    <connections>
+                        <outlet property="backBtn" destination="vGu-3c-lEA" id="PDH-iG-LUu"/>
+                        <outlet property="playerFatherView" destination="tAQ-jO-8G2" id="NvY-ZG-O9r"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Xtt-n3-IqY" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1925.5999999999999" y="-269.41529235382313"/>
         </scene>
         <!--Main Nav View Controller-->
         <scene sceneID="NFG-fo-Cgx">
@@ -127,6 +188,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="ZFPlayer_back_full.png" width="27" height="27"/>
         <image name="record_tab_unactivate" width="25" height="25"/>
         <image name="setting_tab_unactivate" width="25" height="25"/>
         <image name="video_tab_unactivate" width="25" height="25"/>

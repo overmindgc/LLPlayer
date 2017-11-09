@@ -12,6 +12,7 @@
 #import "DocumentWatcher.h"
 #import "VideoItemModel.h"
 #import "VideoPlayerViewController.h"
+#import "MoviePlayerViewController.h"
 #import "AVUtils.h"
 #import "FileHelpers.h"
 
@@ -107,17 +108,11 @@ static NSString * tableCellIndentifer = @"TableCellIndentifer";
     VideoItemModel *model = [self.dataSource objectAtIndex:row];
     
     if (model.canPlay) {
-        VideoPlayerViewController *playerVC = [[VideoPlayerViewController alloc] init];
-        playerVC.videoPath = model.path;
-        playerVC.videoName = model.name;
-        playerVC.videoSize = model.videoSize;
-        //    UINavigationController *playerNav = [[UINavigationController alloc] initWithRootViewController:playerVC];
-        //    [self.navigationController presentViewController:playerNav animated:YES completion:^{
-        //
-        //    }];
-        [self.navigationController pushViewController:playerVC animated:YES];
-    } else {
-        
+//        VideoPlayerViewController *playerVC = [[VideoPlayerViewController alloc] init];
+//        playerVC.videoPath = model.path;
+//        playerVC.videoName = model.name;
+//        playerVC.videoSize = model.videoSize;
+        [self performSegueWithIdentifier:@"showMovieView" sender:self];
     }
 }
 
@@ -176,6 +171,20 @@ static NSString * tableCellIndentifer = @"TableCellIndentifer";
 - (BOOL)emptyDataSetShouldAllowScroll:(UIScrollView *)scrollView
 {
     return YES;
+}
+
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    MoviePlayerViewController *movie = (MoviePlayerViewController *)segue.destinationViewController;
+    UITableViewCell *cell            = (UITableViewCell *)sender;
+    NSIndexPath *indexPath           = [self.tableView indexPathForCell:cell];
+    [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+    VideoItemModel *model = [self.dataSource objectAtIndex:indexPath.row];
+    NSURL *URL                       = [NSURL fileURLWithPath:model.path];
+    movie.videoURL                   = URL;
+    movie.videoTitle = model.name;
 }
 
 #pragma mark actions
