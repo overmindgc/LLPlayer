@@ -196,9 +196,9 @@
 		B76066C51FAC554600231B10 /* LLPlayer */ = {
 			isa = PBXGroup;
 			children = (
-				B764A1D41FAC71BD00B151E6 /* ViewControllers */,
-				B764A2041FB03EBF00B151E6 /* OpenSource */,
-				B764A1ED1FAEC83000B151E6 /* Macros.h */,
+				B764A1D41FAC71BD00B151E6 /* PlayerViews */,
+				B764A2551FB53A0B00B151E6 /* Helpers */,
+				B764A2041FB03EBF00B151E6 /* SourceFrameworks */,
 				B76066C61FAC554600231B10 /* AppDelegate.h */,
 				B76066C71FAC554600231B10 /* AppDelegate.m */,
 				B76066CF1FAC554600231B10 /* Assets.xcassets */,
@@ -225,21 +225,19 @@
 			path = SBPlayer;
 			sourceTree = "<group>";
 		};
-		B764A1D41FAC71BD00B151E6 /* ViewControllers */ = {
+		B764A1D41FAC71BD00B151E6 /* PlayerViews */ = {
 			isa = PBXGroup;
 			children = (
-				B764A21B1FB1BA5300B151E6 /* FileHelpers.h */,
-				B764A21C1FB1BA5300B151E6 /* FileHelpers.m */,
 				B764A1DE1FAEB3C600B151E6 /* Videos */,
-				B764A1E01FAEB3E500B151E6 /* Settings */,
 				B764A1DF1FAEB3DA00B151E6 /* Records */,
+				B764A1E01FAEB3E500B151E6 /* Settings */,
 				B764A1D11FAC6C7B00B151E6 /* MainNavViewController.h */,
 				B764A1D21FAC6C7B00B151E6 /* MainNavViewController.m */,
 				B764A1CE1FAC650A00B151E6 /* MainTabBarViewController.h */,
 				B764A1CF1FAC650A00B151E6 /* MainTabBarViewController.m */,
 				B76066CC1FAC554600231B10 /* Main.storyboard */,
 			);
-			path = ViewControllers;
+			path = PlayerViews;
 			sourceTree = "<group>";
 		};
 		B764A1DE1FAEB3C600B151E6 /* Videos */ = {
@@ -258,8 +256,6 @@
 				B764A1EF1FAF24A100B151E6 /* VideoPlayerViewController.m */,
 				B764A24E1FB4361400B151E6 /* MoviePlayerViewController.h */,
 				B764A24F1FB4361400B151E6 /* MoviePlayerViewController.m */,
-				B764A2001FAFFC7400B151E6 /* AVUtils.h */,
-				B764A2011FAFFC7400B151E6 /* AVUtils.m */,
 			);
 			path = Videos;
 			sourceTree = "<group>";
@@ -297,37 +293,37 @@
 			path = Resource;
 			sourceTree = "<group>";
 		};
-		B764A2041FB03EBF00B151E6 /* OpenSource */ = {
+		B764A2041FB03EBF00B151E6 /* SourceFrameworks */ = {
 			isa = PBXGroup;
 			children = (
 				B764A2511FB4371800B151E6 /* ZFNavigationController */,
 				B764A21E1FB4058C00B151E6 /* ZFPlayer */,
 				B76066E01FAC56D800231B10 /* SBPlayer */,
 			);
-			path = OpenSource;
+			path = SourceFrameworks;
 			sourceTree = "<group>";
 		};
 		B764A21E1FB4058C00B151E6 /* ZFPlayer */ = {
 			isa = PBXGroup;
 			children = (
-				B764A21F1FB4058C00B151E6 /* ZFPlayerModel.m */,
-				B764A2201FB4058C00B151E6 /* ZFPlayerControlViewDelegate.h */,
-				B764A2211FB4058C00B151E6 /* ZFPlayerControlView.h */,
-				B764A2221FB4058C00B151E6 /* ASValuePopUpView.h */,
-				B764A2231FB4058C00B151E6 /* Category */,
-				B764A2321FB4058C00B151E6 /* MMMaterialDesignSpinner.h */,
-				B764A2331FB4058C00B151E6 /* ZFPlayerView.h */,
-				B764A2341FB4058C00B151E6 /* ASValueTrackingSlider.h */,
-				B764A2351FB4058C00B151E6 /* ZFPlayer.h */,
-				B764A2361FB4058C00B151E6 /* ZFBrightnessView.m */,
 				B764A2371FB4058C00B151E6 /* ZFPlayer.bundle */,
-				B764A2381FB4058C00B151E6 /* ZFPlayerModel.h */,
-				B764A2391FB4058C00B151E6 /* ASValuePopUpView.m */,
-				B764A23A1FB4058C00B151E6 /* ZFPlayerControlView.m */,
+				B764A2231FB4058C00B151E6 /* Category */,
+				B764A2351FB4058C00B151E6 /* ZFPlayer.h */,
+				B764A2201FB4058C00B151E6 /* ZFPlayerControlViewDelegate.h */,
+				B764A2331FB4058C00B151E6 /* ZFPlayerView.h */,
 				B764A23B1FB4058C00B151E6 /* ZFPlayerView.m */,
-				B764A23C1FB4058C00B151E6 /* MMMaterialDesignSpinner.m */,
-				B764A23D1FB4058C00B151E6 /* ZFBrightnessView.h */,
+				B764A2211FB4058C00B151E6 /* ZFPlayerControlView.h */,
+				B764A23A1FB4058C00B151E6 /* ZFPlayerControlView.m */,
+				B764A2341FB4058C00B151E6 /* ASValueTrackingSlider.h */,
 				B764A23E1FB4058C00B151E6 /* ASValueTrackingSlider.m */,
+				B764A2221FB4058C00B151E6 /* ASValuePopUpView.h */,
+				B764A2391FB4058C00B151E6 /* ASValuePopUpView.m */,
+				B764A23D1FB4058C00B151E6 /* ZFBrightnessView.h */,
+				B764A2361FB4058C00B151E6 /* ZFBrightnessView.m */,
+				B764A2321FB4058C00B151E6 /* MMMaterialDesignSpinner.h */,
+				B764A23C1FB4058C00B151E6 /* MMMaterialDesignSpinner.m */,
+				B764A2381FB4058C00B151E6 /* ZFPlayerModel.h */,
+				B764A21F1FB4058C00B151E6 /* ZFPlayerModel.m */,
 			);
 			path = ZFPlayer;
 			sourceTree = "<group>";
@@ -360,6 +356,18 @@
 				B764A2531FB4371800B151E6 /* UINavigationController+ZFFullscreenPopGesture.h */,
 			);
 			path = ZFNavigationController;
+			sourceTree = "<group>";
+		};
+		B764A2551FB53A0B00B151E6 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				B764A1ED1FAEC83000B151E6 /* Macros.h */,
+				B764A2001FAFFC7400B151E6 /* AVUtils.h */,
+				B764A2011FAFFC7400B151E6 /* AVUtils.m */,
+				B764A21B1FB1BA5300B151E6 /* FileHelpers.h */,
+				B764A21C1FB1BA5300B151E6 /* FileHelpers.m */,
+			);
+			path = Helpers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

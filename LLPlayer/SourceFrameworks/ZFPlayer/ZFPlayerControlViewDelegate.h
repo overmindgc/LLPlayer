@@ -63,4 +63,7 @@
 /** 控制层即将隐藏 */
 - (void)zf_controlViewWillHidden:(UIView *)controlView isFullscreen:(BOOL)fullscreen;
 
+/** 字幕隐藏按钮事件 */
+- (void)zf_controlView:(UIView *)controlView subTitleMaskSwitchAction:(UIButton *)sender;
+
 @end

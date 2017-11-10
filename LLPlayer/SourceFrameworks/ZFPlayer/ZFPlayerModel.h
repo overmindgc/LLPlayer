@@ -55,5 +55,7 @@
  * 播放器View的父视图tag（根据tag值在cell里查找playerView加到哪里)
  */
 @property (nonatomic, assign) NSInteger    fatherViewTag;
+/**是否开启字幕遮挡*/
+@property (nonatomic, assign) BOOL isEnableSubTitleMask;
 
 @end

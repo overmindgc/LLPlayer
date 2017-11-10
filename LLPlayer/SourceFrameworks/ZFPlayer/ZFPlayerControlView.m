@@ -87,6 +87,9 @@ static const CGFloat ZFPlayerControlBarAutoFadeOutTimeInterval = 0.35f;
 @property (nonatomic, strong) UIImageView             *placeholderImageView;
 /** 控制层消失时候在底部显示的播放进度progress */
 @property (nonatomic, strong) UIProgressView          *bottomProgressView;
+/** 字幕开关按钮*/
+@property (nonatomic, strong) UIButton                *subTitleswitchButton;
+
 /** 分辨率的名称 */
 @property (nonatomic, strong) NSArray                 *resolutionArray;
 
@@ -138,6 +141,8 @@ static const CGFloat ZFPlayerControlBarAutoFadeOutTimeInterval = 0.35f;
         [self.topImageView addSubview:self.titleLabel];
         [self addSubview:self.closeBtn];
         [self addSubview:self.bottomProgressView];
+        
+        [self addSubview:self.subTitleswitchButton];
         
         // 添加子控件的约束
         [self makeSubViewsConstraints];
@@ -300,6 +305,11 @@ static const CGFloat ZFPlayerControlBarAutoFadeOutTimeInterval = 0.35f;
         make.leading.trailing.mas_offset(0);
         make.bottom.mas_offset(0);
     }];
+    
+    [self.subTitleswitchButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.trailing.mas_equalTo(-10);
+        make.centerY.mas_equalTo(self.backBtn.mas_centerY);
+    }];
 }
 
 - (void)layoutSubviews {
@@ -456,6 +466,15 @@ static const CGFloat ZFPlayerControlBarAutoFadeOutTimeInterval = 0.35f;
     }
 }
 
+- (void)subTitleSwitchBtnClick:(UIButton *)sender {
+    UIButton *currBtn = (UIButton *)sender;
+    currBtn.selected = !currBtn.selected;
+    
+    if ([self.delegate respondsToSelector:@selector(zf_controlView:subTitleMaskSwitchAction:)]) {
+        [self.delegate zf_controlView:self subTitleMaskSwitchAction:sender];
+    }
+}
+
 /**
  *  应用退到后台
  */
@@ -544,6 +563,8 @@ static const CGFloat ZFPlayerControlBarAutoFadeOutTimeInterval = 0.35f;
     }
     self.bottomProgressView.alpha  = 0;
     ZFPlayerShared.isStatusBarHidden = NO;
+    
+    self.subTitleswitchButton.alpha = 1;
 }
 
 - (void)hideControlView {
@@ -559,6 +580,8 @@ static const CGFloat ZFPlayerControlBarAutoFadeOutTimeInterval = 0.35f;
     if (self.isFullScreen && !self.playeEnd && !self.isShrink) {
         ZFPlayerShared.isStatusBarHidden = YES;
     }
+    
+    self.subTitleswitchButton.alpha = 0;
 }
 
 /**
@@ -854,6 +877,22 @@ static const CGFloat ZFPlayerControlBarAutoFadeOutTimeInterval = 0.35f;
         _bottomProgressView.trackTintColor    = [UIColor clearColor];
     }
     return _bottomProgressView;
+}
+
+- (UIButton *)subTitleswitchButton {
+    if (!_subTitleswitchButton) {
+        _subTitleswitchButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        [_subTitleswitchButton setImage:ZFPlayerImage(@"LL_Switch_button_off") forState:UIControlStateNormal];
+        [_subTitleswitchButton setImage:ZFPlayerImage(@"LL_Switch_button_on") forState:UIControlStateSelected];
+        [_subTitleswitchButton setTitle:@"字幕遮挡" forState:UIControlStateNormal];
+        [_subTitleswitchButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        _subTitleswitchButton.titleLabel.font = [UIFont systemFontOfSize:11];
+        _subTitleswitchButton.titleEdgeInsets = UIEdgeInsetsMake(0, -45, 0, 45);
+        _subTitleswitchButton.imageEdgeInsets = UIEdgeInsetsMake(0, 42, 0, -42);
+        [_subTitleswitchButton addTarget:self action:@selector(subTitleSwitchBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+        
+    }
+    return _subTitleswitchButton;
 }
 
 #pragma mark - UIGestureRecognizerDelegate

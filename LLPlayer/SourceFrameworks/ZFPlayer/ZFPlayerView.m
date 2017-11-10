@@ -112,6 +112,8 @@ typedef NS_ENUM(NSInteger, PanDirection){
 @property (nonatomic, strong) UIPanGestureRecognizer *shrinkPanGesture;
 
 @property (nonatomic, strong) UIView                 *controlView;
+/**字幕遮挡的模糊遮罩视图*/
+@property (nonatomic, strong) UIVisualEffectView     *blurMaskView;
 @property (nonatomic, strong) ZFPlayerModel          *playerModel;
 @property (nonatomic, assign) NSInteger              seekTime;
 @property (nonatomic, strong) NSURL                  *videoURL;
@@ -220,6 +222,9 @@ typedef NS_ENUM(NSInteger, PanDirection){
 }
 
 - (void)playerControlView:(UIView *)controlView playerModel:(ZFPlayerModel *)playerModel {
+    if (playerModel.isEnableSubTitleMask) {
+        [self setBlurMaskView];
+    }
     if (!controlView) {
         // 指定默认控制层
         ZFPlayerControlView *defaultControlView = [[ZFPlayerControlView alloc] init];
@@ -1363,6 +1368,20 @@ typedef NS_ENUM(NSInteger, PanDirection){
     }];
 }
 
+- (void)setBlurMaskView {
+    UIBlurEffect *effect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
+    UIVisualEffectView *blueMaskView = [[UIVisualEffectView alloc] initWithEffect:effect];
+    blueMaskView.hidden = YES;
+    [self addSubview:blueMaskView];
+    [blueMaskView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self).offset(0);
+        make.right.mas_equalTo(self).offset(0);
+        make.bottom.mas_equalTo(self).offset(0);
+        make.height.mas_equalTo(@50);
+    }];
+    _blurMaskView = blueMaskView;
+}
+
 - (void)setPlayerModel:(ZFPlayerModel *)playerModel {
     _playerModel = playerModel;
 
@@ -1618,6 +1637,10 @@ typedef NS_ENUM(NSInteger, PanDirection){
     if ([self.delegate respondsToSelector:@selector(zf_playerControlViewWillHidden:isFullscreen:)]) {
         [self.delegate zf_playerControlViewWillHidden:controlView isFullscreen:fullscreen];
     }
+}
+
+- (void)zf_controlView:(UIView *)controlView subTitleMaskSwitchAction:(UIButton *)sender {
+    _blurMaskView.hidden = !sender.isSelected;
 }
 
 #pragma clang diagnostic pop
