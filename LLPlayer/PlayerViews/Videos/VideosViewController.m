@@ -11,7 +11,6 @@
 #import "VideoItemModel.h"
 #import "DocumentWatcher.h"
 #import "VideoItemModel.h"
-#import "VideoPlayerViewController.h"
 #import "MoviePlayerViewController.h"
 #import "AVUtils.h"
 #import "FileHelpers.h"
@@ -42,18 +41,20 @@ static NSString * tableCellIndentifer = @"TableCellIndentifer";
     [self searchFilesFromDocument];
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+}
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
 
-//- (BOOL)prefersStatusBarHidden
-//{
-//    return NO;
-//}
-//- (UIStatusBarStyle)preferredStatusBarStyle{
-//    return UIStatusBarStyleLightContent;
-//}
+- (UIStatusBarStyle)preferredStatusBarStyle{
+    return UIStatusBarStyleLightContent;
+}
 
 #pragma mark UITableViewDelegate
 
@@ -210,7 +211,6 @@ static NSString * tableCellIndentifer = @"TableCellIndentifer";
 //    NSLog(@"%@", fileArray);
 //    NSArray <NSFileAttributeKey,id> *attrArray = [fileManager attributesOfItemAtPath:filePath error:&error];
 //    NSLog(@"%@", attrArray);
-    
     [self.dataSource removeAllObjects];
     for (NSString *fileName in fileArray) {
         NSString *fullPath = [NSString stringWithFormat:@"%@/%@",filePath,fileName];

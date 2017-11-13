@@ -46,7 +46,7 @@
 //            obj.tabBarItem.selectedImage = [[UIImage imageNamed:@"tabicon_message_active"]
 //                                            imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
         } else if (idx == 1) {
-            obj.tabBarItem.image = [[UIImage imageNamed:@"record_tab_unactivate"]
+            obj.tabBarItem.image = [[UIImage imageNamed:@"dubbing_tab_unactivate"]
                                     imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
 //            obj.tabBarItem.selectedImage = [[UIImage imageNamed:@"tabicon_undo_active"]
 //                                            imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];

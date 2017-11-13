@@ -1,18 +1,18 @@
 //
-//  ConfigViewController.m
+//  DubbingViewController.m
 //  LLPlayer
 //
-//  Created by 辰 宫 on 05/11/2017.
+//  Created by 辰 宫 on 13/11/2017.
 //  Copyright © 2017 GC. All rights reserved.
 //
 
-#import "ConfigViewController.h"
+#import "DubbingViewController.h"
 
-@interface ConfigViewController ()
+@interface DubbingViewController ()
 
 @end
 
-@implementation ConfigViewController
+@implementation DubbingViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
