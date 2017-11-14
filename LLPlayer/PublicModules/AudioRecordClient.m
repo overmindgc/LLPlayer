@@ -23,19 +23,33 @@
     return sharedInstance;
 }
 
-- (void)startRecrod
-{
-    
+/**
+ *  设置音频会话
+ */
+- (void)setAudioSession {
+    AVAudioSession *session = [AVAudioSession sharedInstance];
+    NSError *sessionError;
+    //AVAudioSessionCategoryPlayAndRecord用于录音和播放
+    [session setCategory:AVAudioSessionCategoryPlayAndRecord error:&sessionError];
+    if(session == nil)
+        NSLog(@"Error creating session: %@", [sessionError description]);
+    else
+        [session setActive:YES error:nil];
 }
 
-- (NSDictionary *)audioRecordingSettings{
+/**
+ *  取得录音文件设置
+ *
+ *  @return 录音设置
+ */
+- (NSDictionary *)audioRecordingSettings {
     
     NSDictionary *result = nil;
     
     NSMutableDictionary *recordSetting = [[NSMutableDictionary alloc]init];
     //设置录音格式  AVFormatIDKey==kAudioFormatLinearPCM
     //    [recordSetting setValue:[NSNumber numberWithInt:kAudioFormatMPEG4AAC] forKey:AVFormatIDKey];
-    [recordSetting setValue:[NSNumber numberWithInt:kAudioFormatAppleLossless] forKey:AVFormatIDKey];
+    [recordSetting setValue:[NSNumber numberWithInt:kAudioFormatMPEG4AAC] forKey:AVFormatIDKey];
     //设置录音采样率(Hz) 如：AVSampleRateKey==8000/44100/96000（影响音频的质量）
     [recordSetting setValue:[NSNumber numberWithFloat:44100] forKey:AVSampleRateKey];
     //录音通道数  1 或 2
@@ -47,6 +61,34 @@
     
     result = [NSDictionary dictionaryWithDictionary:recordSetting];
     return result;
+}
+
+/**
+ *  取得录音文件保存路径
+ *
+ *  @return 录音文件路径
+ */
+- (NSURL *)getSavePath {
+    
+    //  在Documents目录下创建一个名为FileData的文件夹
+    NSString *path = [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:RecordAudioCacheFolder];
+    NSLog(@"%@",path);
+    
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    BOOL isDir = NO;
+    BOOL isDirExist = [fileManager fileExistsAtPath:path isDirectory:&isDir];
+    if(!(isDirExist && isDir)) {
+        BOOL bCreateDir = [fileManager createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:nil];
+        if(!bCreateDir){
+            NSLog(@"创建文件夹失败！");
+        }
+        NSLog(@"创建文件夹成功，文件路径%@",path);
+    }
+    
+    path = [path stringByAppendingPathComponent:RecordAudioFileName];
+    NSLog(@"file path:%@",path);
+    NSURL *url = [NSURL fileURLWithPath:path];
+    return url;
 }
 
 

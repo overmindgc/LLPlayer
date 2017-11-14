@@ -10,6 +10,7 @@
 		A64EFC3F4C431C2D3B045E59 /* libPods-LLPlayer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6C8411BECEF82C5B1A54C917 /* libPods-LLPlayer.a */; };
 		B71A1F171FB98C98008B26AD /* AudioRecordClient.m in Sources */ = {isa = PBXBuildFile; fileRef = B71A1F161FB98C98008B26AD /* AudioRecordClient.m */; };
 		B71A1F1B1FB99E7E008B26AD /* SpectrumView.m in Sources */ = {isa = PBXBuildFile; fileRef = B71A1F1A1FB99E7D008B26AD /* SpectrumView.m */; };
+		B71A1F281FBA9542008B26AD /* AudioRecordControlView.m in Sources */ = {isa = PBXBuildFile; fileRef = B71A1F271FBA9542008B26AD /* AudioRecordControlView.m */; };
 		B76066C81FAC554600231B10 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B76066C71FAC554600231B10 /* AppDelegate.m */; };
 		B76066CE1FAC554600231B10 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B76066CC1FAC554600231B10 /* Main.storyboard */; };
 		B76066D01FAC554600231B10 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B76066CF1FAC554600231B10 /* Assets.xcassets */; };
@@ -52,6 +53,8 @@
 		B71A1F161FB98C98008B26AD /* AudioRecordClient.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AudioRecordClient.m; sourceTree = "<group>"; };
 		B71A1F191FB99E7D008B26AD /* SpectrumView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpectrumView.h; sourceTree = "<group>"; };
 		B71A1F1A1FB99E7D008B26AD /* SpectrumView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SpectrumView.m; sourceTree = "<group>"; };
+		B71A1F261FBA9542008B26AD /* AudioRecordControlView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AudioRecordControlView.h; sourceTree = "<group>"; };
+		B71A1F271FBA9542008B26AD /* AudioRecordControlView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AudioRecordControlView.m; sourceTree = "<group>"; };
 		B76066C31FAC554600231B10 /* LLPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LLPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B76066C61FAC554600231B10 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		B76066C71FAC554600231B10 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -161,6 +164,8 @@
 				B764A24F1FB4361400B151E6 /* MoviePlayerViewController.m */,
 				B71A1F151FB98C98008B26AD /* AudioRecordClient.h */,
 				B71A1F161FB98C98008B26AD /* AudioRecordClient.m */,
+				B71A1F261FBA9542008B26AD /* AudioRecordControlView.h */,
+				B71A1F271FBA9542008B26AD /* AudioRecordControlView.m */,
 			);
 			path = PublicModules;
 			sourceTree = "<group>";
@@ -481,6 +486,7 @@
 				B764A1EB1FAEC5D300B151E6 /* DocumentWatcher.m in Sources */,
 				B764A2471FB4058C00B151E6 /* ZFBrightnessView.m in Sources */,
 				B764A21D1FB1BA5400B151E6 /* FileHelpers.m in Sources */,
+				B71A1F281FBA9542008B26AD /* AudioRecordControlView.m in Sources */,
 				B764A1D01FAC650A00B151E6 /* MainTabBarViewController.m in Sources */,
 				B764A2401FB4058C00B151E6 /* UITabBarController+ZFPlayerRotation.m in Sources */,
 				B71A1F171FB98C98008B26AD /* AudioRecordClient.m in Sources */,

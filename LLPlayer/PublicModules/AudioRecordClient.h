@@ -12,4 +12,23 @@
 
 + (AudioRecordClient *)defaultClient;
 
+/**
+ *  设置音频会话
+ */
+- (void)setAudioSession;
+
+/**
+ *  取得录音文件设置
+ *
+ *  @return 录音设置
+ */
+- (NSDictionary *)audioRecordingSettings;
+
+/**
+ *  取得录音文件保存路径
+ *
+ *  @return 录音文件路径
+ */
+- (NSURL *)getSavePath;
+
 @end

@@ -54,6 +54,8 @@
     
     NSLog(@"setup");
 
+    self.backgroundColor = [UIColor whiteColor];
+    
     self.numberOfItems = 20.f;//偶数
 
     self.itemColor = [UIColor colorWithRed:241/255.f green:60/255.f blue:57/255.f alpha:1.0];

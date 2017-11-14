@@ -12,8 +12,6 @@
 
 @property (nonatomic, copy) void (^itemLevelCallback)();
 
-//
-
 @property (nonatomic) NSUInteger numberOfItems;
 
 @property (nonatomic) UIColor * itemColor;

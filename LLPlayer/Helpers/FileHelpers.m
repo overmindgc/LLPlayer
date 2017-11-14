@@ -75,4 +75,23 @@
     }
 }
 
+- (void)clearCacheDirectoryWithFolder:(NSString *)folderName
+{
+    NSString *basePath = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    NSString *folderPath = basePath;
+    if (folderName) {
+        folderPath = [NSString stringWithFormat:@"%@/%@",basePath,folderName];
+    }
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    // 获取指定路径对应文件夹下的所有文件
+    NSError *error;
+    NSArray <NSString *> *fileArray = [fileManager contentsOfDirectoryAtPath:folderPath error:&error];
+    for (NSString *fileName in fileArray) {
+        NSString *fullPath = [NSString stringWithFormat:@"%@/%@",folderPath,fileName];
+        if ([fileManager fileExistsAtPath:fullPath]) {
+            [fileManager removeItemAtPath:fullPath error:nil];
+        }
+    }
+}
+
 @end
