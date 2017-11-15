@@ -16,6 +16,8 @@
  *  设置音频会话
  */
 - (void)setAudioSession;
+- (void)setRecordAudioSession;
+- (void)setPlayerAudioSession;
 
 /**
  *  取得录音文件设置

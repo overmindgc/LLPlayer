@@ -26,10 +26,12 @@
 @property (nonatomic, strong) UILabel *myRecordDescLabel;
 
 @property (nonatomic, strong) SpectrumView *spectrumView;
+@property (nonatomic, strong) UIView *recordingView;
 
 @property (nonatomic,strong) AVAudioRecorder *audioRecorder;//音频录音机
 @property (nonatomic,strong) AVAudioPlayer *audioPlayer;//音频播放器，用于播放录音文件
 @property (nonatomic,strong) NSTimer *secondTimer;//计秒器
+@property (nonatomic) NSInteger currRecordingSecond;
 
 @end
 
@@ -72,12 +74,6 @@
     [_recordPlayButton addTarget:self action:@selector(myselfButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:_recordPlayButton];
     
-    _microphoneDescLabel = [[UILabel alloc] init];
-    _microphoneDescLabel.text = @"Tip to start record";
-    _microphoneDescLabel.font = [UIFont systemFontOfSize:14];
-    _microphoneDescLabel.textColor = [UIColor lightGrayColor];
-    [self addSubview:_microphoneDescLabel];
-    
     _originDescLabel = [[UILabel alloc] init];
     _originDescLabel.text = @"Origin";
     _originDescLabel.font = [UIFont systemFontOfSize:13];
@@ -89,6 +85,11 @@
     _myRecordDescLabel.font = [UIFont systemFontOfSize:13];
     _myRecordDescLabel.textColor = [UIColor lightGrayColor];
     [self addSubview:_myRecordDescLabel];
+    
+    _recordingView = [[UIView alloc] init];
+    _recordingView.backgroundColor = [UIColor whiteColor];
+    _recordingView.hidden = YES;
+    [self addSubview:_recordingView];
     
     _spectrumView = [[SpectrumView alloc] init];
     _spectrumView.text = [NSString stringWithFormat:@"%ds",0];
@@ -102,10 +103,15 @@
         float power = [weakSelf.audioRecorder averagePowerForChannel:0];
         weakSpectrumView.level = power;
     };
-    _spectrumView.hidden = YES;
     UITapGestureRecognizer *tapGesturRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapSpectrumViewAction:)];
     [_spectrumView addGestureRecognizer:tapGesturRecognizer];
-    [self addSubview:_spectrumView];
+    [_recordingView addSubview:_spectrumView];
+    
+    _microphoneDescLabel = [[UILabel alloc] init];
+    _microphoneDescLabel.text = @"Tip to start record";
+    _microphoneDescLabel.font = [UIFont systemFontOfSize:14];
+    _microphoneDescLabel.textColor = [UIColor lightGrayColor];
+    [self addSubview:_microphoneDescLabel];
     
     [_microphoneButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.equalTo(self.mas_centerX);
@@ -143,12 +149,28 @@
         make.top.equalTo(_recordPlayButton.mas_bottom).offset(-3);
     }];
     
-    [_spectrumView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.leading.equalTo(self.mas_leading).offset(20);
-        make.trailing.equalTo(self.mas_trailing).offset(-20);
+    [_recordingView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.leading.equalTo(self.mas_leading).offset(0);
+        make.trailing.equalTo(self.mas_trailing).offset(0);
         make.top.equalTo(self.mas_top).offset(0);
         make.bottom.equalTo(self.mas_bottom).offset(0);
     }];
+    
+    CGFloat spectrumPadding = SCREE_WIDTH * 0.1;
+    [_spectrumView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.leading.equalTo(_recordingView.mas_leading).offset(spectrumPadding);
+        make.trailing.equalTo(_recordingView.mas_trailing).offset(-spectrumPadding);
+        make.top.equalTo(_recordingView.mas_top).offset(0);
+        make.bottom.equalTo(_recordingView.mas_bottom).offset(0);
+    }];
+}
+
+- (void)willMoveToSuperview:(UIView *)newSuperview
+{
+    if (_secondTimer) {
+        [self stopSecondTimer];
+        _secondTimer = nil;
+    }
 }
 
 #pragma mark record and play
@@ -157,7 +179,8 @@
  *
  *  @return 录音机对象
  */
--(AVAudioRecorder *)audioRecorder{
+-(AVAudioRecorder *)audioRecorder
+{
     if (!_audioRecorder) {
         [[AudioRecordClient defaultClient] setAudioSession];
         //创建录音文件保存路径
@@ -182,7 +205,8 @@
  *
  *  @return 播放器
  */
--(AVAudioPlayer *)audioPlayer{
+-(AVAudioPlayer *)audioPlayer
+{
     if (!_audioPlayer) {
         NSURL *url = [[AudioRecordClient defaultClient] getSavePath];
         NSError *error=nil;
@@ -198,27 +222,16 @@
     return _audioPlayer;
 }
 
-///**
-// *  录音声波监控定制器
-// *
-// *  @return 定时器
-// */
-//-(NSTimer *)timer{
-//    if (!_timer) {
-//        _timer = [NSTimer scheduledTimerWithTimeInterval:0.1f target:self selector:@selector(audioPowerChange) userInfo:nil repeats:YES];
-//    }
-//    return _timer;
-//}
-//
-///**
-// *  录音声波状态设置
-// */
-//-(void)audioPowerChange{
-//    [self.audioRecorder updateMeters];//更新测量值
-//    float power= [self.audioRecorder averagePowerForChannel:0];//取得第一个通道的音频，注意音频强度范围时-160到0
-//    CGFloat progress=(1.0/160.0)*(power+160.0);
-//    [self.audioPower setProgress:progress];
-//}
+/**
+ *  @return 定时器
+ */
+-(NSTimer *)secondTimer{
+    if (!_secondTimer) {
+        _secondTimer = [NSTimer timerWithTimeInterval:1 target:self selector:@selector(secondTimerChange) userInfo:nil repeats:YES];
+        [[NSRunLoop currentRunLoop] addTimer:_secondTimer forMode:NSRunLoopCommonModes];
+    }
+    return _secondTimer;
+}
 
 #pragma mark - 录音机代理方法
 /**
@@ -235,18 +248,17 @@
 #pragma mark - Player代理
 - (void)audioPlayerDidFinishPlaying:(AVAudioPlayer *)player successfully:(BOOL)flag
 {
-    _recordPlayButton.selected = NO;
+    [self playerStopPlay];
+}
+- (void)audioPlayerDecodeErrorDidOccur:(AVAudioPlayer *)player error:(NSError * __nullable)error
+{
+    NSLog(@"%@",error);
 }
 
 #pragma mark actions
 - (void)micButtonClick:(id)sender
 {
-    if (![self.audioRecorder isRecording]) {
-        NSLog(@"录音开始");
-        [self.audioRecorder record];
-        _spectrumView.hidden = NO;
-        [_spectrumView start];
-    }
+    [self recordStart];
 }
 
 - (void)originButtonClick:(id)sender
@@ -259,26 +271,101 @@
 - (void)myselfButtonClick:(id)sender
 {
     UIButton *myselfBtn = (UIButton *)sender;
-    myselfBtn.selected = !myselfBtn.selected;
-    if (myselfBtn.selected) {
-        if (![self.audioPlayer isPlaying]) {
-            [self.audioPlayer play];
-        }
+    if (!myselfBtn.selected) {
+        [self playerStartPlay];
     } else {
-        if ([self.audioPlayer isPlaying]) {
-            [self.audioPlayer stop];
-        }
+        [self playerStopPlay];
     }
 }
 
 - (void)tapSpectrumViewAction:(id)tap
 {
+    [self recordEnd];
+}
+
+- (void)secondTimerChange
+{
+    _currRecordingSecond++;
+    _spectrumView.timeLabel.text = [self getMMSSFromSS:_currRecordingSecond];
+}
+
+#pragma mark functions
+
+- (void)recordStart
+{
+    if (![self.audioRecorder isRecording]) {
+//        [[AudioRecordClient defaultClient] setRecordAudioSession];
+        [self playerStopPlay];
+        NSLog(@"录音开始");
+        //        [[AudioRecordClient defaultClient] setRecordAudioSession];
+        [self.audioRecorder record];
+        _currRecordingSecond = 0;
+        [self.secondTimer fire];
+        _spectrumView.timeLabel.text = @"00:01";
+        _microphoneDescLabel.text = @"Recording...Tip to stop";
+        _recordingView.hidden = NO;
+        [_spectrumView start];
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:LL_AUDIO_CONTROL_START_RECORD object:nil];
+    }
+}
+
+- (void)recordEnd
+{
+//    [[AudioRecordClient defaultClient] setAudioSession];
     if ([self.audioRecorder isRecording]) {
         NSLog(@"取消");
         [self.audioRecorder stop];
+        _currRecordingSecond = 0;
+        [self stopSecondTimer];
+        _spectrumView.timeLabel.text = @"00:00";
         [_spectrumView stop];
-        _spectrumView.hidden = YES;
+        _microphoneDescLabel.text = @"Tip to start record";
+        _recordingView.hidden = YES;
+        _audioPlayer = nil; //Player重置一下，不然不能播放
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:LL_AUDIO_CONTROL_END_RECORD object:nil];
     }
+}
+
+- (void)playerStartPlay
+{
+    _recordPlayButton.selected = YES;
+    if (![self.audioPlayer isPlaying]) {
+        [_audioPlayer prepareToPlay];
+        //            [[AudioRecordClient defaultClient] setPlayerAudioSession];
+        [self.audioPlayer play];
+        [[NSNotificationCenter defaultCenter] postNotificationName:LL_AUDIO_CONTROL_START_PLAY_MYSELF object:nil];
+    }
+}
+
+- (void)playerStopPlay
+{
+    _recordPlayButton.selected = NO;
+    if ([self.audioPlayer isPlaying]) {
+        [self.audioPlayer stop];
+    }
+    [[NSNotificationCenter defaultCenter] postNotificationName:LL_AUDIO_CONTROL_END_PLAY_MYSELF object:nil];
+}
+
+- (void)stopSecondTimer
+{
+    if (_secondTimer.isValid) {
+        [_secondTimer invalidate];
+    }
+    _secondTimer = nil;
+}
+
+- (NSString *)getMMSSFromSS:(NSInteger)seconds
+{
+    //format of minute
+    NSString *str_minute = [NSString stringWithFormat:@"%02ld",(seconds%3600)/60];
+    //format of second
+    NSString *str_second = [NSString stringWithFormat:@"%02ld",seconds%60];
+    //format of time
+    NSString *format_time = [NSString stringWithFormat:@"%@:%@",str_minute,str_second];
+    
+    return format_time;
 }
 
 @end

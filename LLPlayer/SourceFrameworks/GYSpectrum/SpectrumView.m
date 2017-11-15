@@ -66,6 +66,7 @@
     self.timeLabel.text = @"";
     [self.timeLabel setTextColor:[UIColor grayColor]];
     [self.timeLabel setTextAlignment:NSTextAlignmentCenter];
+    self.timeLabel.adjustsFontSizeToFitWidth = YES;
     [self addSubview:self.timeLabel];
 }
 
@@ -78,6 +79,8 @@
     self.itemWidth = CGRectGetWidth(self.bounds);
 
     [self.timeLabel sizeToFit];
+    CGRect fitFrame = self.timeLabel.frame;
+    self.timeLabel.frame = CGRectMake(fitFrame.origin.x, fitFrame.origin.y, self.middleInterval, fitFrame.size.height);
     self.timeLabel.center = CGPointMake(self.itemWidth * 0.5f, self.itemHeight * 0.5f);
 
     self.lineWidth = (self.itemWidth - self.middleInterval) / 2.f / self.numberOfItems;
@@ -142,10 +145,10 @@
 
 
 - (void)setLevel:(CGFloat)level {
-    //NSLog(@"setLevel:%f",level);
+//    NSLog(@"setLevel:%f",level);
     level = (level+37.5)*3.2;
     if( level < 0 ) level = 0;
-
+//    NSLog(@"setLevel:%f",level);
     [self.levels removeObjectAtIndex:self.numberOfItems/2-1];
     [self.levels insertObject:@(level / 6.f) atIndex:0];
     
@@ -180,7 +183,7 @@
 
 
     for(int i = 0; i < self.numberOfItems / 2; i++) {
-
+        
         CGFloat lineHeight = self.lineWidth + [self.levels[i] floatValue] * self.lineWidth / 2.f;
         //([[self.levels objectAtIndex:i]intValue]+1)*self.lineWidth/2.f;
         CGFloat lineTop = (self.itemHeight - lineHeight) / 2.f;

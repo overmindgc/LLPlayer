@@ -29,8 +29,33 @@
 - (void)setAudioSession {
     AVAudioSession *session = [AVAudioSession sharedInstance];
     NSError *sessionError;
-    //AVAudioSessionCategoryPlayAndRecord用于录音和播放
-    [session setCategory:AVAudioSessionCategoryPlayAndRecord error:&sessionError];
+    //AVAudioSessionCategoryPlayAndRecord用于录音和播放,使用AVAudioSessionCategoryOptionDefaultToSpeaker默认开启扬声器，不然可能听筒
+    [session setCategory:AVAudioSessionCategoryPlayAndRecord withOptions:AVAudioSessionCategoryOptionDefaultToSpeaker error:&sessionError];
+    if(session == nil)
+        NSLog(@"Error creating session: %@", [sessionError description]);
+    else
+        [session setActive:YES error:nil];
+}
+
+//听筒模式
+- (void)setRecordAudioSession
+{
+    AVAudioSession *session = [AVAudioSession sharedInstance];
+    NSError *sessionError;
+    
+    [session setCategory:AVAudioSessionCategoryRecord error:&sessionError];
+    if(session == nil)
+        NSLog(@"Error creating session: %@", [sessionError description]);
+    else
+        [session setActive:YES error:nil];
+}
+//扬声器模式
+- (void)setPlayerAudioSession
+{
+    AVAudioSession *session = [AVAudioSession sharedInstance];
+    NSError *sessionError;
+    
+    [session setCategory:AVAudioSessionCategoryPlayback error:&sessionError];
     if(session == nil)
         NSLog(@"Error creating session: %@", [sessionError description]);
     else

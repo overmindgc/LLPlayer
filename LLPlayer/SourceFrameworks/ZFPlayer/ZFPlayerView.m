@@ -1237,7 +1237,16 @@ typedef NS_ENUM(NSInteger, PanDirection){
     return YES;
 }
 
-#pragma mark - Setter 
+#pragma mark - Setter
+
+/***
+ 设置静音
+ */
+- (void)setMute:(BOOL)mute
+{
+    _mute = mute;
+    self.player.muted = mute;
+}
 
 /**
  *  videoURL的setter方法

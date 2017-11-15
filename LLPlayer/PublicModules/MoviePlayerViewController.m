@@ -12,6 +12,7 @@
 #import <Masonry/Masonry.h>
 #import "ZFPlayer.h"
 #import "UINavigationController+ZFFullscreenPopGesture.h"
+#import "AudioRecordControlView.h"
 
 @interface MoviePlayerViewController () <ZFPlayerDelegate>
 /** 播放器View的父视图*/
@@ -27,6 +28,7 @@
 @implementation MoviePlayerViewController
 
 - (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     NSLog(@"%@释放了",self.class);
 }
 
@@ -67,6 +69,12 @@
     
     // 自动播放，默认不自动播放
     [self.playerView autoPlayTheVideo];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(recordStartAction) name:LL_AUDIO_CONTROL_START_RECORD object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(recordEndAction) name:LL_AUDIO_CONTROL_END_RECORD object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(recordStartAction) name:LL_AUDIO_CONTROL_START_PLAY_MYSELF object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(recordEndAction) name:LL_AUDIO_CONTROL_END_PLAY_MYSELF object:nil];
 }
 
 // 返回值要必须为NO
@@ -156,6 +164,17 @@
 }
 
 #pragma mark - Action
+
+- (void)recordStartAction
+{
+    _playerView.mute = YES;
+}
+
+- (void)recordEndAction
+{
+    _playerView.mute = NO;
+}
+
 
 - (IBAction)backClick {
     [self.navigationController popViewControllerAnimated:YES];

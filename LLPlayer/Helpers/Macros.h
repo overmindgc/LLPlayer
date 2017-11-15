@@ -16,12 +16,52 @@
 #define StandarDefaults [NSUserDefaults standardUserDefaults]           // 轻量级缓存
 // 颜色值RGB
 #define RGBA(r,g,b,a) [UIColor colorWithRed:r/255.0f green:g/255.0f blue:b/255.0f alpha:a]
+// 屏幕的宽
+#define SCREE_WIDTH                         [[UIScreen mainScreen] bounds].size.width
+// 屏幕的高
+#define SCREE_HEIGHT                        [[UIScreen mainScreen] bounds].size.height
 
 /**
- * 弱引用/强引用
+ * 弱引用/强引用 from YYKit
+ MyObject *obj = [[MyObject alloc] init];
+ self.myObj = obj;
+ @weakify(self)
+ self.myObj.test = ^(){
+ @strongify(self)
+ self.mLabel.text = @"aaa";
+ };
  */
-#define LLWeakSelf(type)   __weak typeof(type) weak##type = type;
-#define LLStrongSelf(type) __strong typeof(type) type = weak##type;
+#ifndef weakify
+#if DEBUG
+#if __has_feature(objc_arc)
+#define weakify(object) autoreleasepool{} __weak __typeof__(object) weak##_##object = object;
+#else
+#define weakify(object) autoreleasepool{} __block __typeof__(object) block##_##object = object;
+#endif
+#else
+#if __has_feature(objc_arc)
+#define weakify(object) try{} @finally{} {} __weak __typeof__(object) weak##_##object = object;
+#else
+#define weakify(object) try{} @finally{} {} __block __typeof__(object) block##_##object = object;
+#endif
+#endif
+#endif
+
+#ifndef strongify
+#if DEBUG
+#if __has_feature(objc_arc)
+#define strongify(object) autoreleasepool{} __typeof__(object) object = weak##_##object;
+#else
+#define strongify(object) autoreleasepool{} __typeof__(object) object = block##_##object;
+#endif
+#else
+#if __has_feature(objc_arc)
+#define strongify(object) try{} @finally{} __typeof__(object) object = weak##_##object;
+#else
+#define strongify(object) try{} @finally{} __typeof__(object) object = block##_##object;
+#endif
+#endif
+#endif
 
 /**
  * 常用常量
