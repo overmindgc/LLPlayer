@@ -21,8 +21,14 @@
 /** 离开页面时候是否在播放 */
 @property (nonatomic, assign) BOOL isPlaying;
 @property (nonatomic, strong) ZFPlayerModel *playerModel;
-@property (nonatomic, strong) UIView *bottomView;
+
 @property (weak, nonatomic) IBOutlet UIButton *backBtn;
+
+@property (weak, nonatomic) IBOutlet UIButton *startABtn;
+@property (weak, nonatomic) IBOutlet UIButton *endBBtn;
+
+@property (weak, nonatomic) IBOutlet AudioRecordControlView *recordControlView;
+
 @end
 
 @implementation MoviePlayerViewController
@@ -73,8 +79,11 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(recordStartAction) name:LL_AUDIO_CONTROL_START_RECORD object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(recordEndAction) name:LL_AUDIO_CONTROL_END_RECORD object:nil];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(recordStartAction) name:LL_AUDIO_CONTROL_START_PLAY_MYSELF object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(recordEndAction) name:LL_AUDIO_CONTROL_END_PLAY_MYSELF object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(startPlayMyselfAction) name:LL_AUDIO_CONTROL_START_PLAY_MYSELF object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(endPlayMyselfAction) name:LL_AUDIO_CONTROL_END_PLAY_MYSELF object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(startPlayOriginAction) name:LL_AUDIO_CONTROL_START_PLAY_ORIGIN object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(endPlayOriginAction) name:LL_AUDIO_CONTROL_END_PLAY_ORIGIN object:nil];
 }
 
 // 返回值要必须为NO
@@ -125,7 +134,7 @@
         _playerModel                  = [[ZFPlayerModel alloc] init];
         _playerModel.title            = _videoTitle;
         _playerModel.videoURL         = self.videoURL;
-        _playerModel.placeholderImage = [UIImage imageNamed:@"loading_bgView1"];
+        _playerModel.placeholderImage = self.defaultThumblImg;
         _playerModel.fatherView       = self.playerFatherView;
         //        _playerModel.resolutionDic = @{@"高清" : self.videoURL.absoluteString,
         //                                       @"标清" : self.videoURL.absoluteString};
@@ -163,18 +172,98 @@
     return _playerView;
 }
 
+#pragma mark ZFPlayerDelegate
+
+- (void)zf_playerRangePlayEndAction
+{
+    self.recordControlView.originPlayButton.selected = NO;
+    self.recordControlView.recordPlayButton.enabled = YES;
+}
+
+- (void)zf_playerRangeResetAction
+{
+    self.playerView.mute = NO;
+    self.startABtn.selected = NO;
+    self.endBBtn.selected = NO;
+    self.recordControlView.originPlayButton.selected = NO;
+    self.recordControlView.recordPlayButton.selected = NO;
+    self.recordControlView.recordPlayButton.enabled = NO;
+}
+
 #pragma mark - Action
 
 - (void)recordStartAction
 {
-    _playerView.mute = YES;
+    self.recordControlView.originPlayButton.selected = NO;
+    self.recordControlView.recordPlayButton.selected = NO;
+    
+    [self.playerView clearRangePlay];
+    
+    self.playerView.mute = YES;
+    
+    self.playerView.rangeStartATime = [self.playerView getCurrentPlayTime];
+    
+    self.startABtn.selected = YES;
+    self.endBBtn.selected = NO;
+    
+    if (self.playerView.isPauseByUser) {
+        [self.playerView play];
+    }
 }
 
 - (void)recordEndAction
 {
-    _playerView.mute = NO;
+    self.playerView.mute = NO;
+    
+    self.playerView.rangeEndBTime = [self.playerView getCurrentPlayTime];
+    
+    self.endBBtn.selected = YES;
+    
+    [self.playerView pause];
 }
 
+- (void)startPlayOriginAction
+{
+    self.recordControlView.recordPlayButton.enabled = NO;
+    [self.playerView startRangePlayOnMute:NO];
+}
+
+- (void)endPlayOriginAction
+{
+    self.recordControlView.recordPlayButton.enabled = YES;
+    [self.playerView pause];
+}
+
+- (void)startPlayMyselfAction
+{
+    [self.playerView startRangePlayOnMute:YES];
+}
+
+- (void)endPlayMyselfAction
+{
+    self.playerView.mute = NO;
+    [self.playerView pause];
+}
+
+- (IBAction)start_A_ButtonClicked:(id)sender
+{
+    UIButton *btn = (UIButton *)sender;
+//    btn.selected = !btn.selected;
+    
+    if (btn.isSelected) {
+        
+    }
+}
+
+- (IBAction)start_B_ButtonClicked:(id)sender
+{
+    UIButton *btn = (UIButton *)sender;
+//    btn.selected = !btn.selected;
+    
+    if (btn.isSelected) {
+        
+    }
+}
 
 - (IBAction)backClick {
     [self.navigationController popViewControllerAnimated:YES];

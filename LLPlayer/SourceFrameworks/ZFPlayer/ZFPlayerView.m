@@ -49,6 +49,7 @@ typedef NS_ENUM(NSInteger, PanDirection){
 /** playerLayer */
 @property (nonatomic, strong) AVPlayerLayer          *playerLayer;
 @property (nonatomic, strong) id                     timeObserve;
+@property (nonatomic, strong) id                     rangeEndTimeObserve;//区间结束时间观察者
 /** 滑杆 */
 @property (nonatomic, strong) UISlider               *volumeViewSlider; 
 /** 用来保存快进的总时长 */
@@ -114,10 +115,12 @@ typedef NS_ENUM(NSInteger, PanDirection){
 @property (nonatomic, strong) UIView                 *controlView;
 /**字幕遮挡的模糊遮罩视图*/
 @property (nonatomic, strong) UIVisualEffectView     *blurMaskView;
+
 @property (nonatomic, strong) ZFPlayerModel          *playerModel;
 @property (nonatomic, assign) NSInteger              seekTime;
 @property (nonatomic, strong) NSURL                  *videoURL;
 @property (nonatomic, strong) NSDictionary           *resolutionDic;
+
 @end
 
 @implementation ZFPlayerView
@@ -160,6 +163,11 @@ typedef NS_ENUM(NSInteger, PanDirection){
     if (self.timeObserve) {
         [self.player removeTimeObserver:self.timeObserve];
         self.timeObserve = nil;
+    }
+    //移除区间播放结束观察者
+    if (self.rangeEndTimeObserve) {
+        [self.player removeTimeObserver:self.rangeEndTimeObserve];
+        self.rangeEndTimeObserve = nil;
     }
 }
 
@@ -307,6 +315,7 @@ typedef NS_ENUM(NSInteger, PanDirection){
         self.scrollView     = nil;
         self.indexPath     = nil;
     }
+    [self clearRangePlay];
 }
 
 /**
@@ -475,7 +484,7 @@ typedef NS_ENUM(NSInteger, PanDirection){
     // 使用这个category的应用不会随着手机静音键打开而静音，可在手机静音下播放声音
     NSError *setCategoryError = nil;
     BOOL success = [[AVAudioSession sharedInstance]
-                    setCategory: AVAudioSessionCategoryPlayback
+                    setCategory: AVAudioSessionCategoryPlayAndRecord
                     error: &setCategoryError];
     
     if (!success) { /* handle the error in setCategoryError */ }
@@ -1066,6 +1075,9 @@ typedef NS_ENUM(NSInteger, PanDirection){
         // 转换成CMTime才能给player来控制播放进度
         [self.controlView zf_playerActivity:YES];
         [self.player pause];
+        //拖动过进度条，重置区间播放
+        [self clearRangePlay];
+        if ([self.delegate respondsToSelector:@selector(zf_playerRangeResetAction)]) { [self.delegate zf_playerRangeResetAction]; }
         CMTime dragedCMTime = CMTimeMake(dragedSeconds, 1); //kCMTimeZero
         __weak typeof(self) weakSelf = self;
         [self.player seekToTime:dragedCMTime toleranceBefore:CMTimeMake(1,1) toleranceAfter:CMTimeMake(1,1) completionHandler:^(BOOL finished) {
@@ -1080,6 +1092,90 @@ typedef NS_ENUM(NSInteger, PanDirection){
             if (!weakSelf.playerItem.isPlaybackLikelyToKeepUp && !weakSelf.isLocalVideo) { weakSelf.state = ZFPlayerStateBuffering; }
             
         }];
+    }
+}
+
+#pragma mark add range play functions
+
+- (double)getCurrentPlayTime
+{
+    CMTime currPlayTime = self.player.currentTime;
+    if (currPlayTime.value == 0) {
+        return 0;
+    }
+    return CMTimeGetSeconds(currPlayTime);
+}
+
+- (void)startRangePlayOnMute:(BOOL)isNeedMute
+{
+    if (self.rangeStartATime == 0 || self.rangeEndBTime == 0) {
+        return;
+    }
+    //如果顺序相反，交换位置
+    if (self.rangeStartATime > self.rangeEndBTime) {
+        double tempSec = self.rangeStartATime;
+        self.rangeStartATime = self.rangeEndBTime;
+        self.rangeEndBTime = tempSec;
+    }
+    
+    self.player.muted = isNeedMute;
+    
+    __weak typeof(self) weakSelf = self;
+    
+    [self jumpToPlayTime:self.rangeStartATime completionHandler:^(BOOL finished) {
+        [weakSelf createRangeEndObserve];
+    }];
+}
+
+- (void)createRangeEndObserve
+{
+    __weak typeof(self) weakSelf = self;
+    self.rangeEndTimeObserve = [self.player addBoundaryTimeObserverForTimes:@[[NSValue valueWithCMTime:CMTimeMakeWithSeconds(weakSelf.rangeEndBTime, 1)]] queue:nil usingBlock:^{
+        [weakSelf pause];
+        if ([weakSelf.delegate respondsToSelector:@selector(zf_playerRangePlayEndAction)]) { [weakSelf.delegate zf_playerRangePlayEndAction]; }
+    }];
+}
+
+/**
+ *  从xx秒开始播放视频
+ *
+ *  @param startSeconds 视频跳转的秒数
+ */
+- (void)jumpToPlayTime:(double)startSeconds completionHandler:(void (^)(BOOL finished))completionHandler {
+    if (self.player.currentItem.status == AVPlayerItemStatusReadyToPlay) {
+        // seekTime:completionHandler:不能精确定位
+        // 如果需要精确定位，可以使用seekToTime:toleranceBefore:toleranceAfter:completionHandler:
+        // 转换成CMTime才能给player来控制播放进度
+
+        self.rangeStartATime = startSeconds;
+        [self.controlView zf_playerActivity:NO];
+        [self pause];
+        CMTime startCMTime = CMTimeMakeWithSeconds(startSeconds, 1); //kCMTimeZero
+        
+        __weak typeof(self) weakSelf = self;
+        [self.player seekToTime:startCMTime toleranceBefore:CMTimeMake(1,1) toleranceAfter:CMTimeMake(1,1) completionHandler:^(BOOL finished) {
+            // 视频跳转回调
+            if (completionHandler) { completionHandler(finished); }
+            [weakSelf play];
+            if (!weakSelf.playerItem.isPlaybackLikelyToKeepUp && !weakSelf.isLocalVideo) { weakSelf.state = ZFPlayerStateBuffering; }
+            
+        }];
+    }
+}
+
+- (void)clearRangePlay
+{
+    //恢复视频声音
+    if (self.player.isMuted) {
+        self.player.muted = NO;
+    }
+    self.rangeStartATime = 0;
+    self.rangeEndBTime = 0;
+    
+    //移除区间播放结束观察者
+    if (self.rangeEndTimeObserve) {
+        [self.player removeTimeObserver:self.rangeEndTimeObserve];
+        self.rangeEndTimeObserve = nil;
     }
 }
 

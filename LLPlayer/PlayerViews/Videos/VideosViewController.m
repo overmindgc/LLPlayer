@@ -186,6 +186,7 @@ static NSString * tableCellIndentifer = @"TableCellIndentifer";
     NSURL *URL                       = [NSURL fileURLWithPath:model.path];
     movie.videoURL                   = URL;
     movie.videoTitle = model.name;
+    movie.defaultThumblImg = model.thumbImage;
 }
 
 #pragma mark actions

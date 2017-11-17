@@ -38,6 +38,11 @@
 /** 控制层即将隐藏 */
 - (void)zf_playerControlViewWillHidden:(UIView *)controlView isFullscreen:(BOOL)fullscreen;
 
+/** 区间播放完成事件 */
+- (void)zf_playerRangePlayEndAction;
+/** 区间播放重置事件 */
+- (void)zf_playerRangeResetAction;
+
 @end
 
 // playerLayer的填充模式（默认：等比例填充，直到一个维度到达区域边界）
@@ -78,6 +83,9 @@ typedef NS_ENUM(NSInteger, ZFPlayerState) {
 @property (nonatomic, assign) BOOL                    cellPlayerOnCenter;
 /** player在栈上，即此时push或者模态了新控制器 */
 @property (nonatomic, assign) BOOL                    playerPushedOrPresented;
+
+@property (nonatomic, assign) double              rangeStartATime;//记录区间的开始A时间
+@property (nonatomic, assign) double              rangeEndBTime;//记录区间的结束B时间
 
 /**
  *  单例，用于列表cell上多个视频
@@ -121,5 +129,11 @@ typedef NS_ENUM(NSInteger, ZFPlayerState) {
   * 暂停
  */
 - (void)pause;
+
+- (double)getCurrentPlayTime;
+
+- (void)startRangePlayOnMute:(BOOL)isNeedMute;
+
+- (void)clearRangePlay;
 
 @end

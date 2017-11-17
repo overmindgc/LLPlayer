@@ -66,10 +66,10 @@
 /**
  * 常用常量
  */
-#define MainColor           RGBA(0, 162, 95, 1)
-#define MainColor_Light     RGBA(83, 215, 205, 1)
-#define RecordAudioCacheFolder  @"AudioCache"
-#define RecordAudioFileName     @"recordCache.aac"
+#define MainColor                   RGBA(0, 162, 95, 1)
+#define MainColor_Light             RGBA(83, 215, 105, 1)
+#define RecordAudioCacheFolder      @"AudioCache"
+#define RecordAudioFileName         @"recordCache.aac"
 
 /**
  *  仅仅在DEBUG环境下打印

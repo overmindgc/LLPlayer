@@ -14,5 +14,7 @@
 @property (nonatomic, strong) NSURL *videoURL;
 /** 视频Title */
 @property (nonatomic, copy) NSString *videoTitle;
+/** 视频默认缩略图 */
+@property (nonatomic, strong) UIImage *defaultThumblImg;
 
 @end

@@ -14,6 +14,13 @@
 #define LL_AUDIO_CONTROL_START_PLAY_MYSELF @"LLAudioControlStartPlayMySelf" //开始播放自己声音
 #define LL_AUDIO_CONTROL_END_PLAY_MYSELF @"LLAudioControlEndPlayMySelf" //结束播放自己声音
 
+#define LL_AUDIO_CONTROL_START_PLAY_ORIGIN @"LLAudioControlStartPlayOrigin" //开始播放原声
+#define LL_AUDIO_CONTROL_END_PLAY_ORIGIN @"LLAudioControlEndPlayOrigin" //结束播放原声
+
 @interface AudioRecordControlView : UIView
+
+@property (nonatomic, strong) UIButton *originPlayButton;
+
+@property (nonatomic, strong) UIButton *recordPlayButton;
 
 @end

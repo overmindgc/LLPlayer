@@ -17,10 +17,6 @@
 
 @property (nonatomic, strong) UIButton *microphoneButton;
 
-@property (nonatomic, strong) UIButton *originPlayButton;
-
-@property (nonatomic, strong) UIButton *recordPlayButton;
-
 @property (nonatomic, strong) UILabel *microphoneDescLabel;
 @property (nonatomic, strong) UILabel *originDescLabel;
 @property (nonatomic, strong) UILabel *myRecordDescLabel;
@@ -66,11 +62,13 @@
     [_originPlayButton setImage:[UIImage imageNamed:@"play_origin"] forState:UIControlStateNormal];
     [_originPlayButton setImage:[UIImage imageNamed:@"stop_play"] forState:UIControlStateSelected];
     [_originPlayButton addTarget:self action:@selector(originButtonClick:) forControlEvents:UIControlEventTouchUpInside];
+    _originPlayButton.enabled = NO;
     [self addSubview:_originPlayButton];
     
     _recordPlayButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [_recordPlayButton setImage:[UIImage imageNamed:@"play_myself"] forState:UIControlStateNormal];
     [_recordPlayButton setImage:[UIImage imageNamed:@"stop_play"] forState:UIControlStateSelected];
+    _recordPlayButton.enabled = NO;
     [_recordPlayButton addTarget:self action:@selector(myselfButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:_recordPlayButton];
     
@@ -266,6 +264,11 @@
     UIButton *orgBtn = (UIButton *)sender;
     orgBtn.selected = !orgBtn.selected;
 
+    if (orgBtn.isSelected) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:LL_AUDIO_CONTROL_START_PLAY_ORIGIN object:nil];
+    } else {
+        [[NSNotificationCenter defaultCenter] postNotificationName:LL_AUDIO_CONTROL_END_PLAY_ORIGIN object:nil];
+    }
 }
 
 - (void)myselfButtonClick:(id)sender
@@ -295,7 +298,7 @@
 {
     if (![self.audioRecorder isRecording]) {
 //        [[AudioRecordClient defaultClient] setRecordAudioSession];
-        [self playerStopPlay];
+//        [self playerStopPlay];
         NSLog(@"录音开始");
         //        [[AudioRecordClient defaultClient] setRecordAudioSession];
         [self.audioRecorder record];
@@ -324,6 +327,9 @@
         _recordingView.hidden = YES;
         _audioPlayer = nil; //Player重置一下，不然不能播放
         
+        self.originPlayButton.enabled = YES;
+        self.recordPlayButton.enabled = YES;
+        
         [[NSNotificationCenter defaultCenter] postNotificationName:LL_AUDIO_CONTROL_END_RECORD object:nil];
     }
 }
@@ -332,6 +338,7 @@
 {
     _recordPlayButton.selected = YES;
     if (![self.audioPlayer isPlaying]) {
+        self.originPlayButton.enabled = NO;
         [_audioPlayer prepareToPlay];
         //            [[AudioRecordClient defaultClient] setPlayerAudioSession];
         [self.audioPlayer play];
@@ -342,6 +349,7 @@
 - (void)playerStopPlay
 {
     _recordPlayButton.selected = NO;
+    self.originPlayButton.enabled = YES;
     if ([self.audioPlayer isPlaying]) {
         [self.audioPlayer stop];
     }
