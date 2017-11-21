@@ -13,6 +13,7 @@
 #import "ZFPlayer.h"
 #import "UINavigationController+ZFFullscreenPopGesture.h"
 #import "AudioRecordControlView.h"
+#import "TimeUtils.h"
 
 @interface MoviePlayerViewController () <ZFPlayerDelegate>
 /** 播放器View的父视图*/
@@ -26,6 +27,8 @@
 
 @property (weak, nonatomic) IBOutlet UIButton *startABtn;
 @property (weak, nonatomic) IBOutlet UIButton *endBBtn;
+@property (weak, nonatomic) IBOutlet UILabel *startTimeLabel;
+@property (weak, nonatomic) IBOutlet UILabel *endTimeLabel;
 
 @property (weak, nonatomic) IBOutlet AudioRecordControlView *recordControlView;
 
@@ -177,91 +180,109 @@
 - (void)zf_playerRangePlayEndAction
 {
     self.recordControlView.originPlayButton.selected = NO;
-    self.recordControlView.recordPlayButton.enabled = YES;
+    [self.recordControlView recordEnd];
 }
 
 - (void)zf_playerRangeResetAction
 {
-    self.playerView.mute = NO;
-    self.startABtn.selected = NO;
-    self.endBBtn.selected = NO;
-    self.recordControlView.originPlayButton.selected = NO;
-    self.recordControlView.recordPlayButton.selected = NO;
-    self.recordControlView.recordPlayButton.enabled = NO;
+
 }
 
 #pragma mark - Action
 
 - (void)recordStartAction
 {
-    self.recordControlView.originPlayButton.selected = NO;
-    self.recordControlView.recordPlayButton.selected = NO;
-    
-    [self.playerView clearRangePlay];
-    
     self.playerView.mute = YES;
     
-    self.playerView.rangeStartATime = [self.playerView getCurrentPlayTime];
-    
-    self.startABtn.selected = YES;
-    self.endBBtn.selected = NO;
-    
-    if (self.playerView.isPauseByUser) {
-        [self.playerView play];
-    }
+    [self.playerView startRangePlayOnMute:YES needPlay:YES];
 }
 
 - (void)recordEndAction
 {
-    self.playerView.mute = NO;
-    
-    self.playerView.rangeEndBTime = [self.playerView getCurrentPlayTime];
-    
-    self.endBBtn.selected = YES;
-    
     [self.playerView pause];
 }
 
 - (void)startPlayOriginAction
 {
-    self.recordControlView.recordPlayButton.enabled = NO;
-    [self.playerView startRangePlayOnMute:NO];
+    [self.playerView startRangePlayOnMute:NO needPlay:YES];
 }
 
 - (void)endPlayOriginAction
 {
-    self.recordControlView.recordPlayButton.enabled = YES;
-    [self.playerView pause];
+    [self.playerView startRangePlayOnMute:NO needPlay:NO];
 }
 
 - (void)startPlayMyselfAction
 {
-    [self.playerView startRangePlayOnMute:YES];
+    [self.playerView startRangePlayOnMute:YES needPlay:YES];
 }
 
 - (void)endPlayMyselfAction
 {
     self.playerView.mute = NO;
+    
     [self.playerView pause];
 }
 
 - (IBAction)start_A_ButtonClicked:(id)sender
 {
     UIButton *btn = (UIButton *)sender;
-//    btn.selected = !btn.selected;
+    btn.selected = !btn.selected;
+    self.startTimeLabel.hidden = !btn.isSelected;
     
     if (btn.isSelected) {
-        
+        NSInteger startSec = [self.playerView setNowToRangeStartTime];
+        self.startTimeLabel.text = [TimeUtils getMMSSFromSS:startSec];
+        //如果AB全都设置
+        if (self.endBBtn.isSelected) {
+            if (self.playerView.rangeStartATime != self.playerView.rangeEndBTime) {
+                //如果开始结束时间相反，就交换
+                if (self.playerView.rangeStartATime > self.playerView.rangeEndBTime) {
+                    [self.playerView exchangeStartAAndEndB];
+                    NSString *tempStr = self.startTimeLabel.text;
+                    self.startTimeLabel.text = self.endTimeLabel.text;
+                    self.endTimeLabel.text = tempStr;
+                }
+                //可录音
+                [self.recordControlView enabledControlWithInitStatus];
+            }
+        }
+    } else {
+        //如果取消选择
+        [self.recordControlView disabledAll];
+        [self.playerView clearRangeAPoint];
     }
 }
 
 - (IBAction)start_B_ButtonClicked:(id)sender
 {
     UIButton *btn = (UIButton *)sender;
-//    btn.selected = !btn.selected;
+    btn.selected = !btn.selected;
+    self.endTimeLabel.hidden = !btn.isSelected;
     
     if (btn.isSelected) {
-        
+        NSInteger endSec = [self.playerView setNowToRangeEndTime];
+        self.endTimeLabel.text = [TimeUtils getMMSSFromSS:endSec];
+        //如果AB全都设置
+        if (self.startABtn.isSelected) {
+            if (self.playerView.rangeStartATime != self.playerView.rangeEndBTime) {
+                //如果开始结束时间相反，就交换
+                if (self.playerView.rangeStartATime > self.playerView.rangeEndBTime) {
+                    [self.playerView exchangeStartAAndEndB];
+                    NSString *tempStr = self.startTimeLabel.text;
+                    self.startTimeLabel.text = self.endTimeLabel.text;
+                    self.endTimeLabel.text = tempStr;
+                }
+                //可录音
+                [self.recordControlView enabledControlWithInitStatus];
+            }
+        }
+        self.playerView.mute = NO;
+        [self.playerView pause];
+    } else {
+        //如果取消选择
+        [self.recordControlView disabledAll];
+        [self.playerView clearRangeBPoint];
     }
 }
 

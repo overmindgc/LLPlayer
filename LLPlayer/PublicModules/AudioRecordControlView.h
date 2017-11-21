@@ -19,8 +19,16 @@
 
 @interface AudioRecordControlView : UIView
 
+@property (nonatomic, strong) UIButton *microphoneButton;
+
 @property (nonatomic, strong) UIButton *originPlayButton;
 
 @property (nonatomic, strong) UIButton *recordPlayButton;
+
+- (void)recordEnd;
+
+- (void)enabledControlWithInitStatus;
+
+- (void)disabledAll;
 
 @end

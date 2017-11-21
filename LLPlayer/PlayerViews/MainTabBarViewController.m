@@ -61,6 +61,22 @@
     }];
 }
 
+- (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController
+{
+    NSInteger vcIndex = [self.viewControllers indexOfObject:viewController];
+    switch (vcIndex) {
+        case 0:
+            tabBarController.title = @"Videos";
+            break;
+        case 1:
+            tabBarController.title = @"My Dubbing";
+            break;
+        case 2:
+            tabBarController.title = @"Settings";
+            break;
+    }
+}
+
 //绘制图片
 -(UIImage *)drawTabBarItemBackgroundUmageWithSize:(CGSize)size
 {

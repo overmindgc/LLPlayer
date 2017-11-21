@@ -1075,9 +1075,9 @@ typedef NS_ENUM(NSInteger, PanDirection){
         // 转换成CMTime才能给player来控制播放进度
         [self.controlView zf_playerActivity:YES];
         [self.player pause];
-        //拖动过进度条，重置区间播放
-        [self clearRangePlay];
-        if ([self.delegate respondsToSelector:@selector(zf_playerRangeResetAction)]) { [self.delegate zf_playerRangeResetAction]; }
+//        //拖动过进度条，重置区间播放
+//        [self clearRangePlay];
+//        if ([self.delegate respondsToSelector:@selector(zf_playerRangeResetAction)]) { [self.delegate zf_playerRangeResetAction]; }
         CMTime dragedCMTime = CMTimeMake(dragedSeconds, 1); //kCMTimeZero
         __weak typeof(self) weakSelf = self;
         [self.player seekToTime:dragedCMTime toleranceBefore:CMTimeMake(1,1) toleranceAfter:CMTimeMake(1,1) completionHandler:^(BOOL finished) {
@@ -1097,6 +1097,18 @@ typedef NS_ENUM(NSInteger, PanDirection){
 
 #pragma mark add range play functions
 
+//- (void)showPlayerControlView
+//{
+//    // 显示控制层
+//    [self.controlView zf_playerShowControlView];
+//}
+//
+//- (void)hidePlayerControlView
+//{
+//    // 隐藏控制层
+//    [self.controlView zf_playerHideControlView];
+//}
+
 - (double)getCurrentPlayTime
 {
     CMTime currPlayTime = self.player.currentTime;
@@ -1106,16 +1118,33 @@ typedef NS_ENUM(NSInteger, PanDirection){
     return CMTimeGetSeconds(currPlayTime);
 }
 
-- (void)startRangePlayOnMute:(BOOL)isNeedMute
+- (double)setNowToRangeStartTime
+{
+    self.rangeStartATime = [self getCurrentPlayTime];
+    return self.rangeStartATime;
+}
+
+- (double)setNowToRangeEndTime
+{
+    self.rangeEndBTime = [self getCurrentPlayTime];
+    return self.rangeEndBTime;
+}
+
+- (void)exchangeStartAAndEndB
+{
+    double tempSec = self.rangeStartATime;
+    self.rangeStartATime = self.rangeEndBTime;
+    self.rangeEndBTime = tempSec;
+}
+
+- (void)startRangePlayOnMute:(BOOL)isNeedMute needPlay:(BOOL)isNeedPlay
 {
     if (self.rangeStartATime == 0 || self.rangeEndBTime == 0) {
         return;
     }
     //如果顺序相反，交换位置
     if (self.rangeStartATime > self.rangeEndBTime) {
-        double tempSec = self.rangeStartATime;
-        self.rangeStartATime = self.rangeEndBTime;
-        self.rangeEndBTime = tempSec;
+        [self exchangeStartAAndEndB];
     }
     
     self.player.muted = isNeedMute;
@@ -1125,13 +1154,25 @@ typedef NS_ENUM(NSInteger, PanDirection){
     [self jumpToPlayTime:self.rangeStartATime completionHandler:^(BOOL finished) {
         [weakSelf createRangeEndObserve];
     }];
+    
+    if (isNeedPlay) {
+        [self play];
+    } else {
+        [self pause];
+    }
 }
 
 - (void)createRangeEndObserve
 {
+    //先确认移除区间播放结束观察者
+    if (self.rangeEndTimeObserve) {
+        [self.player removeTimeObserver:self.rangeEndTimeObserve];
+        self.rangeEndTimeObserve = nil;
+    }
     __weak typeof(self) weakSelf = self;
-    self.rangeEndTimeObserve = [self.player addBoundaryTimeObserverForTimes:@[[NSValue valueWithCMTime:CMTimeMakeWithSeconds(weakSelf.rangeEndBTime, 1)]] queue:nil usingBlock:^{
+    self.rangeEndTimeObserve = [self.player addBoundaryTimeObserverForTimes:@[[NSValue valueWithCMTime:CMTimeMakeWithSeconds(weakSelf.rangeEndBTime, 600)]] queue:nil usingBlock:^{
         [weakSelf pause];
+        weakSelf.mute = NO;
         if ([weakSelf.delegate respondsToSelector:@selector(zf_playerRangePlayEndAction)]) { [weakSelf.delegate zf_playerRangePlayEndAction]; }
     }];
 }
@@ -1150,16 +1191,34 @@ typedef NS_ENUM(NSInteger, PanDirection){
         self.rangeStartATime = startSeconds;
         [self.controlView zf_playerActivity:NO];
         [self pause];
-        CMTime startCMTime = CMTimeMakeWithSeconds(startSeconds, 1); //kCMTimeZero
+        [self.controlView zf_playerHideControlView];
+        CMTime startCMTime = CMTimeMakeWithSeconds(startSeconds, 600); //kCMTimeZero
         
         __weak typeof(self) weakSelf = self;
-        [self.player seekToTime:startCMTime toleranceBefore:CMTimeMake(1,1) toleranceAfter:CMTimeMake(1,1) completionHandler:^(BOOL finished) {
+        [self.player seekToTime:startCMTime toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:^(BOOL finished) {
             // 视频跳转回调
             if (completionHandler) { completionHandler(finished); }
-            [weakSelf play];
+//            [weakSelf play];
             if (!weakSelf.playerItem.isPlaybackLikelyToKeepUp && !weakSelf.isLocalVideo) { weakSelf.state = ZFPlayerStateBuffering; }
             
         }];
+    }
+}
+
+- (void)clearRangeAPoint
+{
+    self.rangeStartATime = 0;
+    
+}
+
+- (void)clearRangeBPoint
+{
+    self.rangeEndBTime = 0;
+    
+    //移除区间播放结束观察者
+    if (self.rangeEndTimeObserve) {
+        [self.player removeTimeObserver:self.rangeEndTimeObserve];
+        self.rangeEndTimeObserve = nil;
     }
 }
 
@@ -1177,6 +1236,8 @@ typedef NS_ENUM(NSInteger, PanDirection){
         [self.player removeTimeObserver:self.rangeEndTimeObserve];
         self.rangeEndTimeObserve = nil;
     }
+    
+    if ([self.delegate respondsToSelector:@selector(zf_playerRangeResetAction)]) { [self.delegate zf_playerRangeResetAction]; }
 }
 
 #pragma mark - UIPanGestureRecognizer手势方法

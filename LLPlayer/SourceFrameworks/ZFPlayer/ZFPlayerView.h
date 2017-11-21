@@ -130,10 +130,44 @@ typedef NS_ENUM(NSInteger, ZFPlayerState) {
  */
 - (void)pause;
 
+
+///**
+// * 显示控制层
+// */
+//- (void)showPlayerControlView;
+///**
+// * 隐藏控制层
+// */
+//- (void)hidePlayerControlView;
+/**
+ * 获取当前播放的时间
+ */
 - (double)getCurrentPlayTime;
 
-- (void)startRangePlayOnMute:(BOOL)isNeedMute;
+/**
+ * 设置当前播放时间为开始时间
+ */
+- (double)setNowToRangeStartTime;
+/**
+ * 设置当前播放时间为结束时间
+ */
+- (double)setNowToRangeEndTime;
+/**
+ * 交换开始结束时间
+ */
+- (void)exchangeStartAAndEndB;
 
-- (void)clearRangePlay;
+/**
+ * 开始播放区间视频
+ *
+ * @isNeedMute 是否静音播放
+ */
+- (void)startRangePlayOnMute:(BOOL)isNeedMute needPlay:(BOOL)isNeedPlay;
+
+/**
+ * 清除区间播放信息
+ */
+- (void)clearRangeAPoint;
+- (void)clearRangeBPoint;
 
 @end

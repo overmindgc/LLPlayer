@@ -10,6 +10,8 @@
 
 @interface FileHelpers : NSObject
 
+
+
 /**保存图片到沙盒*/
 + (NSString *)saveImageToCacheSandBoxWithData:(UIImage *)image folder:(NSString *)folderName fileName:(NSString *)fileName;
 + (NSString *)saveImageToDocumentSandBoxWithData:(UIImage *)image folder:(NSString *)folderName fileName:(NSString *)fileName;

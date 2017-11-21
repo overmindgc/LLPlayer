@@ -44,6 +44,11 @@
 		B764A2501FB4361400B151E6 /* MoviePlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B764A24F1FB4361400B151E6 /* MoviePlayerViewController.m */; };
 		B764A2541FB4371800B151E6 /* UINavigationController+ZFFullscreenPopGesture.m in Sources */ = {isa = PBXBuildFile; fileRef = B764A2521FB4371800B151E6 /* UINavigationController+ZFFullscreenPopGesture.m */; };
 		B764A25B1FB93F5900B151E6 /* DubbingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B764A25A1FB93F5900B151E6 /* DubbingViewController.m */; };
+		B7BB80BF1FC2CCD1007CB4DB /* TimeUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = B7BB80BE1FC2CCD1007CB4DB /* TimeUtils.m */; };
+		B7BB80CC1FC42A3A007CB4DB /* ZFBaseSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B7BB80C31FC42A3A007CB4DB /* ZFBaseSettingViewController.m */; };
+		B7BB80CD1FC42A3A007CB4DB /* ZFSettingGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = B7BB80C51FC42A3A007CB4DB /* ZFSettingGroup.m */; };
+		B7BB80CE1FC42A3A007CB4DB /* ZFSettingItem.m in Sources */ = {isa = PBXBuildFile; fileRef = B7BB80C61FC42A3A007CB4DB /* ZFSettingItem.m */; };
+		B7BB80CF1FC42A3A007CB4DB /* ZFSettingCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B7BB80CA1FC42A3A007CB4DB /* ZFSettingCell.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -122,6 +127,16 @@
 		B764A2531FB4371800B151E6 /* UINavigationController+ZFFullscreenPopGesture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UINavigationController+ZFFullscreenPopGesture.h"; sourceTree = "<group>"; };
 		B764A2591FB93F5900B151E6 /* DubbingViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DubbingViewController.h; sourceTree = "<group>"; };
 		B764A25A1FB93F5900B151E6 /* DubbingViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DubbingViewController.m; sourceTree = "<group>"; };
+		B7BB80BD1FC2CCD1007CB4DB /* TimeUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TimeUtils.h; sourceTree = "<group>"; };
+		B7BB80BE1FC2CCD1007CB4DB /* TimeUtils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TimeUtils.m; sourceTree = "<group>"; };
+		B7BB80C21FC42A3A007CB4DB /* ZFBaseSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZFBaseSettingViewController.h; sourceTree = "<group>"; };
+		B7BB80C31FC42A3A007CB4DB /* ZFBaseSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZFBaseSettingViewController.m; sourceTree = "<group>"; };
+		B7BB80C51FC42A3A007CB4DB /* ZFSettingGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZFSettingGroup.m; sourceTree = "<group>"; };
+		B7BB80C61FC42A3A007CB4DB /* ZFSettingItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZFSettingItem.m; sourceTree = "<group>"; };
+		B7BB80C71FC42A3A007CB4DB /* ZFSettingGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZFSettingGroup.h; sourceTree = "<group>"; };
+		B7BB80C81FC42A3A007CB4DB /* ZFSettingItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZFSettingItem.h; sourceTree = "<group>"; };
+		B7BB80CA1FC42A3A007CB4DB /* ZFSettingCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZFSettingCell.m; sourceTree = "<group>"; };
+		B7BB80CB1FC42A3A007CB4DB /* ZFSettingCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZFSettingCell.h; sourceTree = "<group>"; };
 		E1C7C783CAC93DA4B77A5503 /* Pods-LLPlayer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LLPlayer.debug.xcconfig"; path = "Pods/Target Support Files/Pods-LLPlayer/Pods-LLPlayer.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -218,8 +233,7 @@
 		B764A1D41FAC71BD00B151E6 /* PlayerViews */ = {
 			isa = PBXGroup;
 			children = (
-				B764A1DE1FAEB3C600B151E6 /* Videos */,
-				B764A1DF1FAEB3DA00B151E6 /* Dubbing */,
+				B764A1DE1FAEB3C600B151E6 /* Videos&Dubbing */,
 				B764A1E01FAEB3E500B151E6 /* Settings */,
 				B764A1D11FAC6C7B00B151E6 /* MainNavViewController.h */,
 				B764A1D21FAC6C7B00B151E6 /* MainNavViewController.m */,
@@ -230,27 +244,20 @@
 			path = PlayerViews;
 			sourceTree = "<group>";
 		};
-		B764A1DE1FAEB3C600B151E6 /* Videos */ = {
+		B764A1DE1FAEB3C600B151E6 /* Videos&Dubbing */ = {
 			isa = PBXGroup;
 			children = (
 				B764A1D51FAEB38300B151E6 /* VideosViewController.h */,
 				B764A1D61FAEB38300B151E6 /* VideosViewController.m */,
+				B764A2591FB93F5900B151E6 /* DubbingViewController.h */,
+				B764A25A1FB93F5900B151E6 /* DubbingViewController.m */,
 				B764A1E11FAEBDAC00B151E6 /* VideoTableViewCell.h */,
 				B764A1E21FAEBDAC00B151E6 /* VideoTableViewCell.m */,
 				B764A1E31FAEBDAC00B151E6 /* VideoTableViewCell.xib */,
 				B764A1E61FAEC28300B151E6 /* VideoItemModel.h */,
 				B764A1E71FAEC28300B151E6 /* VideoItemModel.m */,
 			);
-			path = Videos;
-			sourceTree = "<group>";
-		};
-		B764A1DF1FAEB3DA00B151E6 /* Dubbing */ = {
-			isa = PBXGroup;
-			children = (
-				B764A2591FB93F5900B151E6 /* DubbingViewController.h */,
-				B764A25A1FB93F5900B151E6 /* DubbingViewController.m */,
-			);
-			path = Dubbing;
+			path = "Videos&Dubbing";
 			sourceTree = "<group>";
 		};
 		B764A1E01FAEB3E500B151E6 /* Settings */ = {
@@ -265,9 +272,10 @@
 		B764A2041FB03EBF00B151E6 /* SourceFrameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B764A21E1FB4058C00B151E6 /* ZFPlayer */,
+				B7BB80C01FC42A3A007CB4DB /* ZFSetting */,
 				B71A1F181FB99E6D008B26AD /* GYSpectrum */,
 				B764A2511FB4371800B151E6 /* ZFNavigationController */,
-				B764A21E1FB4058C00B151E6 /* ZFPlayer */,
 			);
 			path = SourceFrameworks;
 			sourceTree = "<group>";
@@ -335,8 +343,49 @@
 				B764A2011FAFFC7400B151E6 /* AVUtils.m */,
 				B764A21B1FB1BA5300B151E6 /* FileHelpers.h */,
 				B764A21C1FB1BA5300B151E6 /* FileHelpers.m */,
+				B7BB80BD1FC2CCD1007CB4DB /* TimeUtils.h */,
+				B7BB80BE1FC2CCD1007CB4DB /* TimeUtils.m */,
 			);
 			path = Helpers;
+			sourceTree = "<group>";
+		};
+		B7BB80C01FC42A3A007CB4DB /* ZFSetting */ = {
+			isa = PBXGroup;
+			children = (
+				B7BB80C11FC42A3A007CB4DB /* Controller */,
+				B7BB80C41FC42A3A007CB4DB /* Model */,
+				B7BB80C91FC42A3A007CB4DB /* View */,
+			);
+			path = ZFSetting;
+			sourceTree = "<group>";
+		};
+		B7BB80C11FC42A3A007CB4DB /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				B7BB80C21FC42A3A007CB4DB /* ZFBaseSettingViewController.h */,
+				B7BB80C31FC42A3A007CB4DB /* ZFBaseSettingViewController.m */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		B7BB80C41FC42A3A007CB4DB /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				B7BB80C51FC42A3A007CB4DB /* ZFSettingGroup.m */,
+				B7BB80C61FC42A3A007CB4DB /* ZFSettingItem.m */,
+				B7BB80C71FC42A3A007CB4DB /* ZFSettingGroup.h */,
+				B7BB80C81FC42A3A007CB4DB /* ZFSettingItem.h */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		B7BB80C91FC42A3A007CB4DB /* View */ = {
+			isa = PBXGroup;
+			children = (
+				B7BB80CA1FC42A3A007CB4DB /* ZFSettingCell.m */,
+				B7BB80CB1FC42A3A007CB4DB /* ZFSettingCell.h */,
+			);
+			path = View;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -472,7 +521,9 @@
 				B764A2491FB4058C00B151E6 /* ASValuePopUpView.m in Sources */,
 				B764A1E81FAEC28300B151E6 /* VideoItemModel.m in Sources */,
 				B764A1DD1FAEB39A00B151E6 /* ConfigViewController.m in Sources */,
+				B7BB80BF1FC2CCD1007CB4DB /* TimeUtils.m in Sources */,
 				B764A2411FB4058C00B151E6 /* UIWindow+CurrentViewController.m in Sources */,
+				B7BB80CF1FC42A3A007CB4DB /* ZFSettingCell.m in Sources */,
 				B764A2541FB4371800B151E6 /* UINavigationController+ZFFullscreenPopGesture.m in Sources */,
 				B764A24A1FB4058C00B151E6 /* ZFPlayerControlView.m in Sources */,
 				B764A24B1FB4058C00B151E6 /* ZFPlayerView.m in Sources */,
@@ -486,7 +537,9 @@
 				B764A1EB1FAEC5D300B151E6 /* DocumentWatcher.m in Sources */,
 				B764A2471FB4058C00B151E6 /* ZFBrightnessView.m in Sources */,
 				B764A21D1FB1BA5400B151E6 /* FileHelpers.m in Sources */,
+				B7BB80CE1FC42A3A007CB4DB /* ZFSettingItem.m in Sources */,
 				B71A1F281FBA9542008B26AD /* AudioRecordControlView.m in Sources */,
+				B7BB80CD1FC42A3A007CB4DB /* ZFSettingGroup.m in Sources */,
 				B764A1D01FAC650A00B151E6 /* MainTabBarViewController.m in Sources */,
 				B764A2401FB4058C00B151E6 /* UITabBarController+ZFPlayerRotation.m in Sources */,
 				B71A1F171FB98C98008B26AD /* AudioRecordClient.m in Sources */,
@@ -497,6 +550,7 @@
 				B764A25B1FB93F5900B151E6 /* DubbingViewController.m in Sources */,
 				B764A2431FB4058C00B151E6 /* UINavigationController+ZFPlayerRotation.m in Sources */,
 				B764A2441FB4058C00B151E6 /* UIAlertController+ZFPlayerRotation.m in Sources */,
+				B7BB80CC1FC42A3A007CB4DB /* ZFBaseSettingViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

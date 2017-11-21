@@ -12,10 +12,9 @@
 #import "SpectrumView.h"
 #import "AudioRecordClient.h"
 #import "FileHelpers.h"
+#import "TimeUtils.h"
 
 @interface AudioRecordControlView () <AVAudioRecorderDelegate,AVAudioPlayerDelegate>
-
-@property (nonatomic, strong) UIButton *microphoneButton;
 
 @property (nonatomic, strong) UILabel *microphoneDescLabel;
 @property (nonatomic, strong) UILabel *originDescLabel;
@@ -56,6 +55,7 @@
     _microphoneButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [_microphoneButton setImage:[UIImage imageNamed:@"record_microphone"] forState:UIControlStateNormal];
     [_microphoneButton addTarget:self action:@selector(micButtonClick:) forControlEvents:UIControlEventTouchUpInside];
+    _microphoneButton.enabled = NO;
     [self addSubview:_microphoneButton];
     
     _originPlayButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -106,7 +106,7 @@
     [_recordingView addSubview:_spectrumView];
     
     _microphoneDescLabel = [[UILabel alloc] init];
-    _microphoneDescLabel.text = @"Tip to start record";
+    _microphoneDescLabel.text = @"Tap to start record";
     _microphoneDescLabel.font = [UIFont systemFontOfSize:14];
     _microphoneDescLabel.textColor = [UIColor lightGrayColor];
     [self addSubview:_microphoneDescLabel];
@@ -265,6 +265,7 @@
     orgBtn.selected = !orgBtn.selected;
 
     if (orgBtn.isSelected) {
+        [self playerStopPlay];
         [[NSNotificationCenter defaultCenter] postNotificationName:LL_AUDIO_CONTROL_START_PLAY_ORIGIN object:nil];
     } else {
         [[NSNotificationCenter defaultCenter] postNotificationName:LL_AUDIO_CONTROL_END_PLAY_ORIGIN object:nil];
@@ -275,6 +276,7 @@
 {
     UIButton *myselfBtn = (UIButton *)sender;
     if (!myselfBtn.selected) {
+        self.originPlayButton.selected = NO;
         [self playerStartPlay];
     } else {
         [self playerStopPlay];
@@ -289,7 +291,7 @@
 - (void)secondTimerChange
 {
     _currRecordingSecond++;
-    _spectrumView.timeLabel.text = [self getMMSSFromSS:_currRecordingSecond];
+    _spectrumView.timeLabel.text = [TimeUtils getMMSSFromSS:_currRecordingSecond];
 }
 
 #pragma mark functions
@@ -298,14 +300,15 @@
 {
     if (![self.audioRecorder isRecording]) {
 //        [[AudioRecordClient defaultClient] setRecordAudioSession];
-//        [self playerStopPlay];
+        [self playerStopPlay];
+        self.originPlayButton.selected = NO;
         NSLog(@"录音开始");
         //        [[AudioRecordClient defaultClient] setRecordAudioSession];
         [self.audioRecorder record];
         _currRecordingSecond = 0;
         [self.secondTimer fire];
         _spectrumView.timeLabel.text = @"00:01";
-        _microphoneDescLabel.text = @"Recording...Tip to stop";
+        _microphoneDescLabel.text = @"Recording...Tap to stop";
         _recordingView.hidden = NO;
         [_spectrumView start];
         
@@ -323,11 +326,10 @@
         [self stopSecondTimer];
         _spectrumView.timeLabel.text = @"00:00";
         [_spectrumView stop];
-        _microphoneDescLabel.text = @"Tip to start record";
+        _microphoneDescLabel.text = @"Tap to start record";
         _recordingView.hidden = YES;
         _audioPlayer = nil; //Player重置一下，不然不能播放
         
-        self.originPlayButton.enabled = YES;
         self.recordPlayButton.enabled = YES;
         
         [[NSNotificationCenter defaultCenter] postNotificationName:LL_AUDIO_CONTROL_END_RECORD object:nil];
@@ -338,9 +340,7 @@
 {
     _recordPlayButton.selected = YES;
     if (![self.audioPlayer isPlaying]) {
-        self.originPlayButton.enabled = NO;
         [_audioPlayer prepareToPlay];
-        //            [[AudioRecordClient defaultClient] setPlayerAudioSession];
         [self.audioPlayer play];
         [[NSNotificationCenter defaultCenter] postNotificationName:LL_AUDIO_CONTROL_START_PLAY_MYSELF object:nil];
     }
@@ -349,11 +349,31 @@
 - (void)playerStopPlay
 {
     _recordPlayButton.selected = NO;
-    self.originPlayButton.enabled = YES;
     if ([self.audioPlayer isPlaying]) {
         [self.audioPlayer stop];
     }
     [[NSNotificationCenter defaultCenter] postNotificationName:LL_AUDIO_CONTROL_END_PLAY_MYSELF object:nil];
+}
+
+- (void)enabledControlWithInitStatus
+{
+    self.microphoneButton.enabled = YES;
+    self.originPlayButton.enabled = YES;
+    self.recordPlayButton.enabled = NO;
+    self.originPlayButton.selected = NO;
+    self.recordPlayButton.selected = NO;
+}
+
+- (void)disabledAll
+{
+    self.originPlayButton.selected = NO;
+    self.recordPlayButton.selected = NO;
+    self.microphoneButton.enabled = NO;
+    self.originPlayButton.enabled = NO;
+    self.recordPlayButton.enabled = NO;
+    if ([self.audioPlayer isPlaying]) {
+        [self.audioPlayer stop];
+    }
 }
 
 - (void)stopSecondTimer
@@ -362,18 +382,6 @@
         [_secondTimer invalidate];
     }
     _secondTimer = nil;
-}
-
-- (NSString *)getMMSSFromSS:(NSInteger)seconds
-{
-    //format of minute
-    NSString *str_minute = [NSString stringWithFormat:@"%02ld",(seconds%3600)/60];
-    //format of second
-    NSString *str_second = [NSString stringWithFormat:@"%02ld",seconds%60];
-    //format of time
-    NSString *format_time = [NSString stringWithFormat:@"%@:%@",str_minute,str_second];
-    
-    return format_time;
 }
 
 @end

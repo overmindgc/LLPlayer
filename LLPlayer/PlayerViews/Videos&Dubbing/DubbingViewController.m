@@ -1,13 +1,14 @@
 //
-//  VideosViewController.m
+//  DubbingViewController.m
 //  LLPlayer
 //
-//  Created by 辰 宫 on 05/11/2017.
+//  Created by 辰 宫 on 13/11/2017.
 //  Copyright © 2017 GC. All rights reserved.
 //
 
-#import "VideosViewController.h"
+#import "DubbingViewController.h"
 #import "VideoTableViewCell.h"
+#import <DZNEmptyDataSet/UIScrollView+EmptyDataSet.h>
 #import "VideoItemModel.h"
 #import "DocumentWatcher.h"
 #import "VideoItemModel.h"
@@ -17,7 +18,7 @@
 
 static NSString * tableCellIndentifer = @"TableCellIndentifer";
 
-@interface VideosViewController () <UITableViewDelegate, UITableViewDataSource, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate>
+@interface DubbingViewController () <UITableViewDelegate, UITableViewDataSource, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate>
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 
@@ -25,17 +26,17 @@ static NSString * tableCellIndentifer = @"TableCellIndentifer";
 
 @end
 
-@implementation VideosViewController
+@implementation DubbingViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    
     [self.tableView registerNib:[UINib nibWithNibName:@"VideoTableViewCell" bundle:nil] forCellReuseIdentifier:tableCellIndentifer];
     
     self.dataSource = [NSMutableArray array];
     
-    // 监听Document目录的文件改动
-    [[DocumentWatcher defaultWatcher] startMonitoringDocumentAsynchronous];
+    //videos里边已经开始监听过文件变动了，这里只响应变动就可以
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fileChanageAction:) name:LLFileChangedNotification object:nil];
     
     [self searchFilesFromDocument];
@@ -61,7 +62,7 @@ static NSString * tableCellIndentifer = @"TableCellIndentifer";
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     return self.dataSource.count;
-//    return 6;
+    //    return 6;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -109,10 +110,10 @@ static NSString * tableCellIndentifer = @"TableCellIndentifer";
     VideoItemModel *model = [self.dataSource objectAtIndex:row];
     
     if (model.canPlay) {
-//        VideoPlayerViewController *playerVC = [[VideoPlayerViewController alloc] init];
-//        playerVC.videoPath = model.path;
-//        playerVC.videoName = model.name;
-//        playerVC.videoSize = model.videoSize;
+        //        VideoPlayerViewController *playerVC = [[VideoPlayerViewController alloc] init];
+        //        playerVC.videoPath = model.path;
+        //        playerVC.videoName = model.name;
+        //        playerVC.videoSize = model.videoSize;
         [self performSegueWithIdentifier:@"showMovieView" sender:self];
     }
 }
@@ -209,9 +210,9 @@ static NSString * tableCellIndentifer = @"TableCellIndentifer";
     NSError *error;
     // 获取指定路径对应文件夹下的所有文件
     NSArray <NSString *> *fileArray = [fileManager contentsOfDirectoryAtPath:filePath error:&error];
-//    NSLog(@"%@", fileArray);
-//    NSArray <NSFileAttributeKey,id> *attrArray = [fileManager attributesOfItemAtPath:filePath error:&error];
-//    NSLog(@"%@", attrArray);
+    //    NSLog(@"%@", fileArray);
+    //    NSArray <NSFileAttributeKey,id> *attrArray = [fileManager attributesOfItemAtPath:filePath error:&error];
+    //    NSLog(@"%@", attrArray);
     [self.dataSource removeAllObjects];
     for (NSString *fileName in fileArray) {
         NSString *fullPath = [NSString stringWithFormat:@"%@/%@",filePath,fileName];
@@ -219,7 +220,7 @@ static NSString * tableCellIndentifer = @"TableCellIndentifer";
         
         //获得所给文件路径所在文件系统的属性
         NSDictionary *attrs = [fileManager attributesOfItemAtPath:fullPath error:nil];
-//        NSLog(@"%@",attrs);
+        //        NSLog(@"%@",attrs);
         NSNumber *fileSize = attrs[NSFileSize];
         NSString *fileMB = [NSString stringWithFormat:@"%.2f",[fileSize doubleValue]/1024.0/1024.0];
         
@@ -243,9 +244,6 @@ static NSString * tableCellIndentifer = @"TableCellIndentifer";
 
 - (void)dealloc
 {
-    // 取消监听Document目录的文件改动
-    [[DocumentWatcher defaultWatcher] stopMonitoringDocument];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
-
 @end
