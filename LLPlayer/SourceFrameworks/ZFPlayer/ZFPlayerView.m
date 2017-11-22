@@ -1080,7 +1080,7 @@ typedef NS_ENUM(NSInteger, PanDirection){
 //        if ([self.delegate respondsToSelector:@selector(zf_playerRangeResetAction)]) { [self.delegate zf_playerRangeResetAction]; }
         CMTime dragedCMTime = CMTimeMake(dragedSeconds, 1); //kCMTimeZero
         __weak typeof(self) weakSelf = self;
-        [self.player seekToTime:dragedCMTime toleranceBefore:CMTimeMake(1,1) toleranceAfter:CMTimeMake(1,1) completionHandler:^(BOOL finished) {
+        [self.player seekToTime:dragedCMTime toleranceBefore:CMTimeMake(1,600) toleranceAfter:CMTimeMake(1,600) completionHandler:^(BOOL finished) {
             [weakSelf.controlView zf_playerActivity:NO];
             // 视频跳转回调
             if (completionHandler) { completionHandler(finished); }
@@ -1208,13 +1208,19 @@ typedef NS_ENUM(NSInteger, PanDirection){
 - (void)clearRangeAPoint
 {
     self.rangeStartATime = 0;
-    
+    //恢复视频声音
+    if (self.player.isMuted) {
+        self.player.muted = NO;
+    }
 }
 
 - (void)clearRangeBPoint
 {
     self.rangeEndBTime = 0;
-    
+    //恢复视频声音
+    if (self.player.isMuted) {
+        self.player.muted = NO;
+    }
     //移除区间播放结束观察者
     if (self.rangeEndTimeObserve) {
         [self.player removeTimeObserver:self.rangeEndTimeObserve];

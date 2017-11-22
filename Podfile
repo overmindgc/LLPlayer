@@ -6,6 +6,7 @@ target 'LLPlayer' do
   # use_frameworks!
 	pod 'Masonry'
     pod 'DZNEmptyDataSet'
+    pod 'SVProgressHUD'
   # Pods for LLPlayer
 
 end

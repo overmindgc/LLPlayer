@@ -14,6 +14,8 @@
 #import "UINavigationController+ZFFullscreenPopGesture.h"
 #import "AudioRecordControlView.h"
 #import "TimeUtils.h"
+#import "AVUtils.h"
+#import "AudioRecordClient.h"
 
 @interface MoviePlayerViewController () <ZFPlayerDelegate>
 /** 播放器View的父视图*/
@@ -29,6 +31,8 @@
 @property (weak, nonatomic) IBOutlet UIButton *endBBtn;
 @property (weak, nonatomic) IBOutlet UILabel *startTimeLabel;
 @property (weak, nonatomic) IBOutlet UILabel *endTimeLabel;
+
+@property (weak, nonatomic) IBOutlet UIButton *saveBtn;
 
 @property (weak, nonatomic) IBOutlet AudioRecordControlView *recordControlView;
 
@@ -245,12 +249,15 @@
                 }
                 //可录音
                 [self.recordControlView enabledControlWithInitStatus];
+                self.saveBtn.hidden = NO;
             }
+            [self.playerView pause];
         }
     } else {
         //如果取消选择
         [self.recordControlView disabledAll];
         [self.playerView clearRangeAPoint];
+        self.saveBtn.hidden = YES;
     }
 }
 
@@ -275,15 +282,30 @@
                 }
                 //可录音
                 [self.recordControlView enabledControlWithInitStatus];
+                self.saveBtn.hidden = NO;
             }
         }
-        self.playerView.mute = NO;
         [self.playerView pause];
     } else {
         //如果取消选择
         [self.recordControlView disabledAll];
         [self.playerView clearRangeBPoint];
+        self.saveBtn.hidden = YES;
     }
+}
+
+- (IBAction)saveClipAction:(id)sender
+{
+    [AVUtils goSaveVideoPath:self.videoURL
+               withStartTime:self.playerView.rangeStartATime
+                 withEndTime:self.playerView.rangeEndBTime
+                    withSize:CGSizeZero
+          withVideoDealPoint:CGPointZero
+                withFileName:@"ClipSample"
+                 shouldScale:NO
+      isWxVideoAssetvertical:NO
+              replaceByMusic:[[AudioRecordClient defaultClient] getSavePath]
+     ];
 }
 
 - (IBAction)backClick {

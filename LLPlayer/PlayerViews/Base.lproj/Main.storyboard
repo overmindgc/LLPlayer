@@ -42,6 +42,7 @@
                     <tabBarItem key="tabBarItem" title="My Dubbing" image="dubbing_tab_unactivate" id="bJa-uc-uy6"/>
                     <connections>
                         <outlet property="tableView" destination="2sH-Vw-Igv" id="i8o-5N-S6E"/>
+                        <segue destination="BvB-z9-vJQ" kind="show" identifier="showMovieView" id="Aec-Pc-1gV"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5RI-4P-89A" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -112,24 +113,9 @@
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tAQ-jO-8G2" userLabel="PlayerFatherView">
                                 <rect key="frame" x="0.0" y="20" width="375" height="211"/>
-                                <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vGu-3c-lEA">
-                                        <rect key="frame" x="10" y="3" width="40" height="40"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="40" id="4TS-vN-r5R"/>
-                                            <constraint firstAttribute="height" constant="40" id="uGT-GI-drx"/>
-                                        </constraints>
-                                        <state key="normal" image="ZFPlayer_back_full.png"/>
-                                        <connections>
-                                            <action selector="backClick" destination="BvB-z9-vJQ" eventType="touchUpInside" id="nQs-Mn-Ovj"/>
-                                        </connections>
-                                    </button>
-                                </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="tAQ-jO-8G2" secondAttribute="height" multiplier="16:9" id="0cC-TL-4vD"/>
-                                    <constraint firstItem="vGu-3c-lEA" firstAttribute="top" secondItem="tAQ-jO-8G2" secondAttribute="top" constant="3" id="FlX-uo-Uju"/>
-                                    <constraint firstItem="vGu-3c-lEA" firstAttribute="leading" secondItem="tAQ-jO-8G2" secondAttribute="leading" constant="10" id="ZzY-Iq-f2e"/>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OUc-dr-sXF" userLabel="statusbarview">
@@ -208,6 +194,24 @@
                                 <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GU9-YB-bSp">
+                                <rect key="frame" x="156" y="509" width="62" height="30"/>
+                                <state key="normal" title="Save clip"/>
+                                <connections>
+                                    <action selector="saveClipAction:" destination="BvB-z9-vJQ" eventType="touchUpInside" id="Cvq-Xc-QEl"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vGu-3c-lEA">
+                                <rect key="frame" x="8" y="23" width="40" height="40"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="40" id="4TS-vN-r5R"/>
+                                    <constraint firstAttribute="height" constant="40" id="uGT-GI-drx"/>
+                                </constraints>
+                                <state key="normal" image="video_back"/>
+                                <connections>
+                                    <action selector="backClick" destination="BvB-z9-vJQ" eventType="touchUpInside" id="nQs-Mn-Ovj"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
@@ -216,6 +220,7 @@
                             <constraint firstItem="ldK-Xm-eSD" firstAttribute="top" secondItem="GKX-9I-RUF" secondAttribute="bottom" constant="3" id="Aat-dy-u5Z"/>
                             <constraint firstItem="iTw-Yh-71n" firstAttribute="top" secondItem="oMp-AS-ReE" secondAttribute="bottom" constant="25" id="Ah8-Pv-pxa"/>
                             <constraint firstItem="LQ8-IQ-fQ4" firstAttribute="trailing" secondItem="SUt-8j-K66" secondAttribute="trailing" id="BxP-4J-yK9"/>
+                            <constraint firstItem="GU9-YB-bSp" firstAttribute="centerX" secondItem="umd-3a-34B" secondAttribute="centerX" id="EcQ-XI-d7O"/>
                             <constraint firstItem="iTw-Yh-71n" firstAttribute="centerX" secondItem="umd-3a-34B" secondAttribute="centerX" id="FU6-nh-0hc"/>
                             <constraint firstItem="LQ8-IQ-fQ4" firstAttribute="top" secondItem="OUc-dr-sXF" secondAttribute="top" constant="20" id="GEe-r7-tYw"/>
                             <constraint firstItem="iTw-Yh-71n" firstAttribute="top" secondItem="tAQ-jO-8G2" secondAttribute="bottom" constant="70" id="Je9-5G-8Vm"/>
@@ -223,11 +228,14 @@
                             <constraint firstItem="ldK-Xm-eSD" firstAttribute="centerX" secondItem="GKX-9I-RUF" secondAttribute="centerX" id="NfE-de-Jv6"/>
                             <constraint firstItem="tAQ-jO-8G2" firstAttribute="leading" secondItem="LQ8-IQ-fQ4" secondAttribute="leading" id="PYv-cJ-ApJ"/>
                             <constraint firstItem="tAQ-jO-8G2" firstAttribute="top" secondItem="LQ8-IQ-fQ4" secondAttribute="top" id="TAc-EE-WMR"/>
+                            <constraint firstItem="GU9-YB-bSp" firstAttribute="top" secondItem="SUt-8j-K66" secondAttribute="bottom" constant="8" id="Uzq-xW-uRS"/>
                             <constraint firstItem="GKX-9I-RUF" firstAttribute="centerY" secondItem="iTw-Yh-71n" secondAttribute="centerY" id="bXa-aO-yW5"/>
                             <constraint firstItem="OUc-dr-sXF" firstAttribute="leading" secondItem="LQ8-IQ-fQ4" secondAttribute="leading" id="duR-wv-YLU"/>
                             <constraint firstItem="Zje-JW-Asj" firstAttribute="top" secondItem="a79-bV-JjB" secondAttribute="bottom" constant="3" id="esJ-eQ-04X"/>
+                            <constraint firstItem="vGu-3c-lEA" firstAttribute="leading" secondItem="LQ8-IQ-fQ4" secondAttribute="leading" constant="8" id="gqf-UB-JLR"/>
                             <constraint firstItem="SUt-8j-K66" firstAttribute="top" secondItem="tAQ-jO-8G2" secondAttribute="bottom" constant="150" id="h17-Wp-Uey"/>
                             <constraint firstItem="oMp-AS-ReE" firstAttribute="centerX" secondItem="umd-3a-34B" secondAttribute="centerX" id="mgf-E9-Ufz"/>
+                            <constraint firstItem="vGu-3c-lEA" firstAttribute="top" secondItem="LQ8-IQ-fQ4" secondAttribute="top" constant="3" id="sD7-5h-0bk"/>
                             <constraint firstItem="a79-bV-JjB" firstAttribute="centerY" secondItem="iTw-Yh-71n" secondAttribute="centerY" id="t65-vj-jNO"/>
                             <constraint firstItem="iTw-Yh-71n" firstAttribute="leading" secondItem="GKX-9I-RUF" secondAttribute="trailing" constant="40" id="twj-6P-PhN"/>
                             <constraint firstItem="Zje-JW-Asj" firstAttribute="centerX" secondItem="a79-bV-JjB" secondAttribute="centerX" id="un5-Ti-fpS"/>
@@ -242,6 +250,7 @@
                         <outlet property="endTimeLabel" destination="Zje-JW-Asj" id="dDa-0e-1mh"/>
                         <outlet property="playerFatherView" destination="tAQ-jO-8G2" id="NvY-ZG-O9r"/>
                         <outlet property="recordControlView" destination="SUt-8j-K66" id="ibT-qY-34a"/>
+                        <outlet property="saveBtn" destination="GU9-YB-bSp" id="fe8-oz-wCa"/>
                         <outlet property="startABtn" destination="GKX-9I-RUF" id="g5k-Or-0yD"/>
                         <outlet property="startTimeLabel" destination="ldK-Xm-eSD" id="ZnP-Yy-RCz"/>
                     </connections>
@@ -298,9 +307,12 @@
         </scene>
     </scenes>
     <resources>
-        <image name="ZFPlayer_back_full.png" width="27" height="27"/>
         <image name="dubbing_tab_unactivate" width="25" height="25"/>
         <image name="setting_tab_unactivate" width="25" height="25"/>
+        <image name="video_back" width="20" height="20"/>
         <image name="video_tab_unactivate" width="25" height="25"/>
     </resources>
+    <inferredMetricsTieBreakers>
+        <segue reference="Hcc-aP-GB4"/>
+    </inferredMetricsTieBreakers>
 </document>

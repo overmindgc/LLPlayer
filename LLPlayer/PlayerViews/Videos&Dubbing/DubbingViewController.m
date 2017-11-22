@@ -24,6 +24,8 @@ static NSString * tableCellIndentifer = @"TableCellIndentifer";
 
 @property (nonatomic,strong) NSMutableArray *dataSource;
 
+@property (nonatomic) NSInteger currentRow;//记录当前点击的行数
+
 @end
 
 @implementation DubbingViewController
@@ -105,6 +107,7 @@ static NSString * tableCellIndentifer = @"TableCellIndentifer";
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSInteger row = indexPath.row;
+    self.currentRow = row;
     VideoTableViewCell *currCell = (VideoTableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
     currCell.selected = NO;
     VideoItemModel *model = [self.dataSource objectAtIndex:row];
@@ -180,10 +183,7 @@ static NSString * tableCellIndentifer = @"TableCellIndentifer";
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     MoviePlayerViewController *movie = (MoviePlayerViewController *)segue.destinationViewController;
-    UITableViewCell *cell            = (UITableViewCell *)sender;
-    NSIndexPath *indexPath           = [self.tableView indexPathForCell:cell];
-    [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
-    VideoItemModel *model = [self.dataSource objectAtIndex:indexPath.row];
+    VideoItemModel *model = [self.dataSource objectAtIndex:self.currentRow];
     NSURL *URL                       = [NSURL fileURLWithPath:model.path];
     movie.videoURL                   = URL;
     movie.videoTitle = model.name;
