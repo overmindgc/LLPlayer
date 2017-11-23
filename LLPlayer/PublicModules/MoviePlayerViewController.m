@@ -296,15 +296,21 @@
 
 - (IBAction)saveClipAction:(id)sender
 {
+    NSURL *recordUrl;
+    if (self.recordControlView.recordPlayButton.isEnabled) {
+        recordUrl = [[AudioRecordClient defaultClient] getSavePath];
+    }
+    NSString *fileName;
+    if (recordUrl) {
+        fileName = [NSString stringWithFormat:@"Dubbing_%0.f",[NSDate date].timeIntervalSince1970 * 1000];
+    } else {
+        fileName = [NSString stringWithFormat:@"Clip_%0.f",[NSDate date].timeIntervalSince1970 * 1000];
+    }
     [AVUtils goSaveVideoPath:self.videoURL
                withStartTime:self.playerView.rangeStartATime
                  withEndTime:self.playerView.rangeEndBTime
-                    withSize:CGSizeZero
-          withVideoDealPoint:CGPointZero
-                withFileName:@"ClipSample"
-                 shouldScale:NO
-      isWxVideoAssetvertical:NO
-              replaceByMusic:[[AudioRecordClient defaultClient] getSavePath]
+                withFileName:fileName
+              replaceByMusic:recordUrl
      ];
 }
 

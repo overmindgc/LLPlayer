@@ -70,6 +70,7 @@
 #define MainColor_Light             RGBA(83, 215, 105, 1)
 #define RecordAudioCacheFolder      @"AudioCache"
 #define RecordAudioFileName         @"recordCache.aac"
+#define DubbingVideoFolder          @"LLDubbing"
 
 /**
  *  仅仅在DEBUG环境下打印

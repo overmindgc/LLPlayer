@@ -206,7 +206,7 @@ static NSString * tableCellIndentifer = @"TableCellIndentifer";
     NSFileManager *fileManager = [NSFileManager defaultManager];
     
     NSString *filePath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
-    
+    filePath = [NSString stringWithFormat:@"%@/%@",filePath,DubbingVideoFolder];
     NSError *error;
     // 获取指定路径对应文件夹下的所有文件
     NSArray <NSString *> *fileArray = [fileManager contentsOfDirectoryAtPath:filePath error:&error];

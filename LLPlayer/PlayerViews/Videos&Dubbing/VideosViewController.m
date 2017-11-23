@@ -216,6 +216,9 @@ static NSString * tableCellIndentifer = @"TableCellIndentifer";
 //    NSLog(@"%@", attrArray);
     [self.dataSource removeAllObjects];
     for (NSString *fileName in fileArray) {
+        if ([fileName isEqualToString:DubbingVideoFolder]) {
+            continue;
+        }
         NSString *fullPath = [NSString stringWithFormat:@"%@/%@",filePath,fileName];
         AVURLAsset *videoAsset = [[AVURLAsset alloc] initWithURL:[NSURL fileURLWithPath:fullPath] options:nil];
         
