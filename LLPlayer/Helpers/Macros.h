@@ -64,15 +64,6 @@
 #endif
 
 /**
- * 常用常量
- */
-#define MainColor                   RGBA(0, 162, 95, 1)
-#define MainColor_Light             RGBA(83, 215, 105, 1)
-#define RecordAudioCacheFolder      @"AudioCache"
-#define RecordAudioFileName         @"recordCache.aac"
-#define DubbingVideoFolder          @"LLDubbing"
-
-/**
  *  仅仅在DEBUG环境下打印
  */
 #ifdef DEBUG

@@ -13,8 +13,8 @@
 #import "DocumentWatcher.h"
 #import "VideoItemModel.h"
 #import "MoviePlayerViewController.h"
-#import "AVUtils.h"
 #import "FileHelpers.h"
+#import "FileService.h"
 
 static NSString * tableCellIndentifer = @"TableCellIndentifer";
 
@@ -80,21 +80,22 @@ static NSString * tableCellIndentifer = @"TableCellIndentifer";
     cell.nameLabel.text = model.name;
     if (model.canPlay) {
         cell.propertyLabel.text = [NSString stringWithFormat:@"Video:%@, Size:%@MB",model.resolution,model.size];
+        if (model.thumbImage && model.canPlay) {
+            cell.videoImageView.image = model.thumbImage;
+        } else {
+            cell.videoImageView.image = [UIImage imageNamed:@"default_video"];
+        }
+        if (model.totalTime && model.canPlay) {
+            [cell.totalTimeLabel setHidden:NO];
+            cell.totalTimeLabel.text = model.totalTime;
+        } else {
+            [cell.totalTimeLabel setHidden:YES];
+        }
     } else if (model.isFolder) {
         cell.propertyLabel.text = [NSString stringWithFormat:@"Folder, Size:%@MB",model.size];
+        cell.videoImageView.image = [UIImage imageNamed:@"folder_icon"];
     } else {
         cell.propertyLabel.text = [NSString stringWithFormat:@"Unsupported Type, Size:%@MB",model.size];
-    }
-    if (model.thumbImage && model.canPlay) {
-        cell.videoImageView.image = model.thumbImage;
-    } else {
-        cell.videoImageView.image = [UIImage imageNamed:@"default_video"];
-    }
-    if (model.totalTime && model.canPlay) {
-        [cell.totalTimeLabel setHidden:NO];
-        cell.totalTimeLabel.text = model.totalTime;
-    } else {
-        [cell.totalTimeLabel setHidden:YES];
     }
     return cell;
     
@@ -139,8 +140,11 @@ static NSString * tableCellIndentifer = @"TableCellIndentifer";
     
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         VideoItemModel *model = [self.dataSource objectAtIndex:indexPath.row];
-        [FileHelpers deleteFileFromSandBoxWithFilePath:model.path];
-        [self searchFilesFromDocument];
+        BOOL isSuccess = [FileHelpers deleteFileFromSandBoxWithFilePath:model.path];
+        if (isSuccess) {
+            [self.dataSource removeObjectAtIndex:indexPath.row];
+            [tableView reloadData];
+        }
     }
     else if (editingStyle == UITableViewCellEditingStyleInsert) {
         // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
@@ -197,53 +201,16 @@ static NSString * tableCellIndentifer = @"TableCellIndentifer";
     // ZFileChangedNotification 通知是在子线程中发出的, 因此通知关联的方法会在子线程中执行
     NSLog(@"文件发生了改变, %@", [NSThread currentThread]);
     
-    dispatch_sync(dispatch_get_main_queue(), ^{
-        [self searchFilesFromDocument];
-    });
+    [self searchFilesFromDocument];
 }
 
 - (void)searchFilesFromDocument
 {
-    NSFileManager *fileManager = [NSFileManager defaultManager];
+    [[FileService shareInstance] searchFilesFromDocument:NO complete:^(NSMutableArray *modelArray) {
+        self.dataSource = modelArray;
+        [self.tableView reloadData];
+    }];
     
-    NSString *filePath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
-    
-    NSError *error;
-    // 获取指定路径对应文件夹下的所有文件
-    NSArray <NSString *> *fileArray = [fileManager contentsOfDirectoryAtPath:filePath error:&error];
-//    NSLog(@"%@", fileArray);
-//    NSArray <NSFileAttributeKey,id> *attrArray = [fileManager attributesOfItemAtPath:filePath error:&error];
-//    NSLog(@"%@", attrArray);
-    [self.dataSource removeAllObjects];
-    for (NSString *fileName in fileArray) {
-        if ([fileName isEqualToString:DubbingVideoFolder]) {
-            continue;
-        }
-        NSString *fullPath = [NSString stringWithFormat:@"%@/%@",filePath,fileName];
-        AVURLAsset *videoAsset = [[AVURLAsset alloc] initWithURL:[NSURL fileURLWithPath:fullPath] options:nil];
-        
-        //获得所给文件路径所在文件系统的属性
-        NSDictionary *attrs = [fileManager attributesOfItemAtPath:fullPath error:nil];
-//        NSLog(@"%@",attrs);
-        NSNumber *fileSize = attrs[NSFileSize];
-        NSString *fileMB = [NSString stringWithFormat:@"%.2f",[fileSize doubleValue]/1024.0/1024.0];
-        
-        VideoItemModel *model = [[VideoItemModel alloc] init];
-        model.name = fileName;
-        model.path = fullPath;
-        model.size = fileMB;
-        model.totalTime = [AVUtils getVideoTotalTime:videoAsset];
-        model.thumbImage = [AVUtils getVideoThumbImage:videoAsset];
-        CGSize videoSize = [AVUtils getVideoSize:videoAsset];
-        model.videoSize = videoSize;
-        model.resolution = [NSString stringWithFormat:@"%0.fx%0.f",videoSize.width,videoSize.height];
-        model.canPlay = videoAsset.isReadable;
-        if (attrs[NSFileType] == NSFileTypeDirectory) {
-            model.isFolder = YES;
-        }
-        [self.dataSource addObject:model];
-    }
-    [self.tableView reloadData];
 }
 
 - (void)dealloc

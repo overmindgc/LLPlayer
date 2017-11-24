@@ -10,13 +10,15 @@
 
 @implementation FileHelpers
 
-+ (void)deleteFileFromSandBoxWithFilePath:(NSString *)filePath
++ (BOOL)deleteFileFromSandBoxWithFilePath:(NSString *)filePath
 {
     // 删除已存在的的文件
     NSFileManager *fileManager = [NSFileManager defaultManager];
+    BOOL delSuccess = NO;
     if ([fileManager fileExistsAtPath:filePath]) {
-        [fileManager removeItemAtPath:filePath error:nil];
+        delSuccess = [fileManager removeItemAtPath:filePath error:nil];
     }
+    return delSuccess;
 }
 
 + (UIImage *)getImageFromSandBoxWithFilePath:(NSString *)filePath
@@ -75,7 +77,7 @@
     }
 }
 
-- (void)clearCacheDirectoryWithFolder:(NSString *)folderName
++ (void)clearCacheDirectoryWithFolder:(NSString *)folderName
 {
     NSString *basePath = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0];
     NSString *folderPath = basePath;

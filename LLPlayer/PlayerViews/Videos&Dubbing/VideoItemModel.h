@@ -7,8 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <AVFoundation/AVFoundation.h>
 
 @interface VideoItemModel : NSObject
+
+@property (nonatomic, strong) AVURLAsset *videoAsset;
 
 @property (nonatomic, copy) NSString *path;
 @property (nonatomic, copy) NSString *name;

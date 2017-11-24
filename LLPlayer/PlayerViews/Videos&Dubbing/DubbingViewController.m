@@ -10,11 +10,10 @@
 #import "VideoTableViewCell.h"
 #import <DZNEmptyDataSet/UIScrollView+EmptyDataSet.h>
 #import "VideoItemModel.h"
-#import "DocumentWatcher.h"
 #import "VideoItemModel.h"
 #import "MoviePlayerViewController.h"
-#import "AVUtils.h"
 #import "FileHelpers.h"
+#import "FileService.h"
 
 static NSString * tableCellIndentifer = @"TableCellIndentifer";
 
@@ -39,7 +38,7 @@ static NSString * tableCellIndentifer = @"TableCellIndentifer";
     self.dataSource = [NSMutableArray array];
     
     //videos里边已经开始监听过文件变动了，这里只响应变动就可以
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fileChanageAction:) name:LLFileChangedNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fileChanageAction:) name:LLClipOrDubbingCreatedNotification object:nil];
     
     [self searchFilesFromDocument];
 }
@@ -138,8 +137,11 @@ static NSString * tableCellIndentifer = @"TableCellIndentifer";
     
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         VideoItemModel *model = [self.dataSource objectAtIndex:indexPath.row];
-        [FileHelpers deleteFileFromSandBoxWithFilePath:model.path];
-        [self searchFilesFromDocument];
+        BOOL isSuccess = [FileHelpers deleteFileFromSandBoxWithFilePath:model.path];
+        if (isSuccess) {
+            [self.dataSource removeObjectAtIndex:indexPath.row];
+            [tableView reloadData];
+        }
     }
     else if (editingStyle == UITableViewCellEditingStyleInsert) {
         // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
@@ -149,7 +151,7 @@ static NSString * tableCellIndentifer = @"TableCellIndentifer";
 #pragma mark EmptyDataSetDelegate
 - (NSAttributedString *)titleForEmptyDataSet:(UIScrollView *)scrollView
 {
-    NSString *text = @"No Videos";
+    NSString *text = @"No Clips";
     
     NSDictionary *attributes = @{NSFontAttributeName: [UIFont boldSystemFontOfSize:16.0f],
                                  NSForegroundColorAttributeName: [UIColor lightGrayColor]};
@@ -160,7 +162,7 @@ static NSString * tableCellIndentifer = @"TableCellIndentifer";
 
 - (UIImage *)imageForEmptyDataSet:(UIScrollView *)scrollView
 {
-    return [UIImage imageNamed:@"empty_videos"];
+    return [UIImage imageNamed:@"empty_clips"];
 }
 
 - (BOOL)emptyDataSetShouldDisplay:(UIScrollView *)scrollView
@@ -196,50 +198,15 @@ static NSString * tableCellIndentifer = @"TableCellIndentifer";
     // ZFileChangedNotification 通知是在子线程中发出的, 因此通知关联的方法会在子线程中执行
     NSLog(@"文件发生了改变, %@", [NSThread currentThread]);
     
-    dispatch_sync(dispatch_get_main_queue(), ^{
-        [self searchFilesFromDocument];
-    });
+    [self searchFilesFromDocument];
 }
 
 - (void)searchFilesFromDocument
 {
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    
-    NSString *filePath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
-    filePath = [NSString stringWithFormat:@"%@/%@",filePath,DubbingVideoFolder];
-    NSError *error;
-    // 获取指定路径对应文件夹下的所有文件
-    NSArray <NSString *> *fileArray = [fileManager contentsOfDirectoryAtPath:filePath error:&error];
-    //    NSLog(@"%@", fileArray);
-    //    NSArray <NSFileAttributeKey,id> *attrArray = [fileManager attributesOfItemAtPath:filePath error:&error];
-    //    NSLog(@"%@", attrArray);
-    [self.dataSource removeAllObjects];
-    for (NSString *fileName in fileArray) {
-        NSString *fullPath = [NSString stringWithFormat:@"%@/%@",filePath,fileName];
-        AVURLAsset *videoAsset = [[AVURLAsset alloc] initWithURL:[NSURL fileURLWithPath:fullPath] options:nil];
-        
-        //获得所给文件路径所在文件系统的属性
-        NSDictionary *attrs = [fileManager attributesOfItemAtPath:fullPath error:nil];
-        //        NSLog(@"%@",attrs);
-        NSNumber *fileSize = attrs[NSFileSize];
-        NSString *fileMB = [NSString stringWithFormat:@"%.2f",[fileSize doubleValue]/1024.0/1024.0];
-        
-        VideoItemModel *model = [[VideoItemModel alloc] init];
-        model.name = fileName;
-        model.path = fullPath;
-        model.size = fileMB;
-        model.totalTime = [AVUtils getVideoTotalTime:videoAsset];
-        model.thumbImage = [AVUtils getVideoThumbImage:videoAsset];
-        CGSize videoSize = [AVUtils getVideoSize:videoAsset];
-        model.videoSize = videoSize;
-        model.resolution = [NSString stringWithFormat:@"%0.fx%0.f",videoSize.width,videoSize.height];
-        model.canPlay = videoAsset.isReadable;
-        if (attrs[NSFileType] == NSFileTypeDirectory) {
-            model.isFolder = YES;
-        }
-        [self.dataSource addObject:model];
-    }
-    [self.tableView reloadData];
+    [[FileService shareInstance] searchFilesFromDocument:YES complete:^(NSMutableArray *modelArray) {
+        self.dataSource = modelArray;
+        [self.tableView reloadData];
+    }];
 }
 
 - (void)dealloc

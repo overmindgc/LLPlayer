@@ -63,6 +63,7 @@
     [_originPlayButton setImage:[UIImage imageNamed:@"stop_play"] forState:UIControlStateSelected];
     [_originPlayButton addTarget:self action:@selector(originButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     _originPlayButton.enabled = NO;
+    [_originPlayButton addObserver:self forKeyPath:@"enabled" options:NSKeyValueObservingOptionNew context:nil];
     [self addSubview:_originPlayButton];
     
     _recordPlayButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -70,6 +71,7 @@
     [_recordPlayButton setImage:[UIImage imageNamed:@"stop_play"] forState:UIControlStateSelected];
     _recordPlayButton.enabled = NO;
     [_recordPlayButton addTarget:self action:@selector(myselfButtonClick:) forControlEvents:UIControlEventTouchUpInside];
+    [_recordPlayButton addObserver:self forKeyPath:@"enabled" options:NSKeyValueObservingOptionNew context:nil];
     [self addSubview:_recordPlayButton];
     
     _originDescLabel = [[UILabel alloc] init];
@@ -83,6 +85,22 @@
     _myRecordDescLabel.font = [UIFont systemFontOfSize:13];
     _myRecordDescLabel.textColor = [UIColor lightGrayColor];
     [self addSubview:_myRecordDescLabel];
+    
+    _saveDubbingButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    [_saveDubbingButton setTitle:@"Save Dubbing" forState:UIControlStateNormal];
+    [_saveDubbingButton setTintColor:MainColor];
+    _saveDubbingButton.titleLabel.font = [UIFont systemFontOfSize:14];
+    _saveDubbingButton.hidden = YES;
+    [_saveDubbingButton addTarget:self action:@selector(saveDubbingButtonClick:) forControlEvents:UIControlEventTouchUpInside];
+    [self addSubview:_saveDubbingButton];
+    
+    _saveClipButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    [_saveClipButton setTitle:@"Save Clip" forState:UIControlStateNormal];
+    [_saveClipButton setTintColor:MainColor];
+    _saveClipButton.titleLabel.font = [UIFont systemFontOfSize:14];
+    _saveClipButton.hidden = YES;
+    [_saveClipButton addTarget:self action:@selector(saveClipButtonClick:) forControlEvents:UIControlEventTouchUpInside];
+    [self addSubview:_saveClipButton];
     
     _recordingView = [[UIView alloc] init];
     _recordingView.backgroundColor = [UIColor whiteColor];
@@ -145,6 +163,16 @@
     [_myRecordDescLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.equalTo(_recordPlayButton.mas_centerX);
         make.top.equalTo(_recordPlayButton.mas_bottom).offset(-3);
+    }];
+    
+    [_saveClipButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.equalTo(_originDescLabel.mas_centerX);
+        make.top.equalTo(_originDescLabel.mas_bottom).offset(10);
+    }];
+    
+    [_saveDubbingButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.equalTo(_myRecordDescLabel.mas_centerX);
+        make.top.equalTo(_myRecordDescLabel.mas_bottom).offset(10);
     }];
     
     [_recordingView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -253,6 +281,25 @@
     NSLog(@"%@",error);
 }
 
+#pragma KVO Observe
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context
+{
+    if ([keyPath isEqualToString:@"enabled"]) {
+        if (object == self.originPlayButton) {
+            NSLog(@"%@",[change valueForKey:NSKeyValueChangeNewKey]);
+            self.saveClipButton.hidden = ![[change valueForKey:NSKeyValueChangeNewKey] boolValue];
+        } else if (object == self.recordPlayButton) {
+            self.saveDubbingButton.hidden = ![[change valueForKey:NSKeyValueChangeNewKey] boolValue];
+        }
+    }
+}
+
+- (void)dealloc
+{
+    [self.originPlayButton removeObserver:self forKeyPath:@"enabled"];
+    [self.recordPlayButton removeObserver:self forKeyPath:@"enabled"];
+}
+
 #pragma mark actions
 - (void)micButtonClick:(id)sender
 {
@@ -281,6 +328,16 @@
     } else {
         [self playerStopPlay];
     }
+}
+
+- (void)saveClipButtonClick:(id)sender
+{
+    [[NSNotificationCenter defaultCenter] postNotificationName:LL_AUDIO_CONTROL_SAVE_CLIP object:nil];
+}
+
+- (void)saveDubbingButtonClick:(id)sender
+{
+    [[NSNotificationCenter defaultCenter] postNotificationName:LL_AUDIO_CONTROL_SAVE_DUBBING object:nil];
 }
 
 - (void)tapSpectrumViewAction:(id)tap

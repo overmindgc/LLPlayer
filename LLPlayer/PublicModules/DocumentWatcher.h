@@ -8,8 +8,6 @@
 
 #import <Foundation/Foundation.h>
 
-static NSString *LLFileChangedNotification = @"LLFileChangedNotification";
-
 @interface DocumentWatcher : NSObject
 
 + (DocumentWatcher *)defaultWatcher;

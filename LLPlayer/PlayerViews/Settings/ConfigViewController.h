@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ZFBaseSettingViewController.h"
 
-@interface ConfigViewController : UIViewController
+@interface ConfigViewController : ZFBaseSettingViewController
 
 @end

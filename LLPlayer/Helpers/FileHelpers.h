@@ -21,10 +21,10 @@
 + (void)deleteFolderFromDocumentSandBoxWithName:(NSString *)folderName;
 
 /**删除沙盒里的文件*/
-+ (void)deleteFileFromSandBoxWithFilePath:(NSString *)filePath;
++ (BOOL)deleteFileFromSandBoxWithFilePath:(NSString *)filePath;
 
 /**清理cache文件夹下的文件，folderName为nil清理所有*/
-- (void)clearCacheDirectoryWithFolder:(NSString *)folderName;
++ (void)clearCacheDirectoryWithFolder:(NSString *)folderName;
 
 /**从沙盒读取图片*/
 + (UIImage *)getImageFromSandBoxWithFilePath:(NSString *)filePath;

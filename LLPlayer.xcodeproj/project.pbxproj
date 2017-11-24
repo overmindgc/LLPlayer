@@ -49,6 +49,7 @@
 		B7BB80CD1FC42A3A007CB4DB /* ZFSettingGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = B7BB80C51FC42A3A007CB4DB /* ZFSettingGroup.m */; };
 		B7BB80CE1FC42A3A007CB4DB /* ZFSettingItem.m in Sources */ = {isa = PBXBuildFile; fileRef = B7BB80C61FC42A3A007CB4DB /* ZFSettingItem.m */; };
 		B7BB80CF1FC42A3A007CB4DB /* ZFSettingCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B7BB80CA1FC42A3A007CB4DB /* ZFSettingCell.m */; };
+		B7BB80D21FC7C19E007CB4DB /* FileService.m in Sources */ = {isa = PBXBuildFile; fileRef = B7BB80D11FC7C19E007CB4DB /* FileService.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -137,6 +138,9 @@
 		B7BB80C81FC42A3A007CB4DB /* ZFSettingItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZFSettingItem.h; sourceTree = "<group>"; };
 		B7BB80CA1FC42A3A007CB4DB /* ZFSettingCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZFSettingCell.m; sourceTree = "<group>"; };
 		B7BB80CB1FC42A3A007CB4DB /* ZFSettingCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZFSettingCell.h; sourceTree = "<group>"; };
+		B7BB80D01FC7C19E007CB4DB /* FileService.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FileService.h; sourceTree = "<group>"; };
+		B7BB80D11FC7C19E007CB4DB /* FileService.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FileService.m; sourceTree = "<group>"; };
+		B7C15D151FC80528006E2C36 /* ConstsMacros.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ConstsMacros.h; sourceTree = "<group>"; };
 		E1C7C783CAC93DA4B77A5503 /* Pods-LLPlayer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LLPlayer.debug.xcconfig"; path = "Pods/Target Support Files/Pods-LLPlayer/Pods-LLPlayer.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -256,6 +260,8 @@
 				B764A1E31FAEBDAC00B151E6 /* VideoTableViewCell.xib */,
 				B764A1E61FAEC28300B151E6 /* VideoItemModel.h */,
 				B764A1E71FAEC28300B151E6 /* VideoItemModel.m */,
+				B7BB80D01FC7C19E007CB4DB /* FileService.h */,
+				B7BB80D11FC7C19E007CB4DB /* FileService.m */,
 			);
 			path = "Videos&Dubbing";
 			sourceTree = "<group>";
@@ -338,6 +344,7 @@
 		B764A2551FB53A0B00B151E6 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				B7C15D151FC80528006E2C36 /* ConstsMacros.h */,
 				B764A1ED1FAEC83000B151E6 /* Macros.h */,
 				B764A2001FAFFC7400B151E6 /* AVUtils.h */,
 				B764A2011FAFFC7400B151E6 /* AVUtils.m */,
@@ -542,6 +549,7 @@
 				B764A21D1FB1BA5400B151E6 /* FileHelpers.m in Sources */,
 				B7BB80CE1FC42A3A007CB4DB /* ZFSettingItem.m in Sources */,
 				B71A1F281FBA9542008B26AD /* AudioRecordControlView.m in Sources */,
+				B7BB80D21FC7C19E007CB4DB /* FileService.m in Sources */,
 				B7BB80CD1FC42A3A007CB4DB /* ZFSettingGroup.m in Sources */,
 				B764A1D01FAC650A00B151E6 /* MainTabBarViewController.m in Sources */,
 				B764A2401FB4058C00B151E6 /* UITabBarController+ZFPlayerRotation.m in Sources */,

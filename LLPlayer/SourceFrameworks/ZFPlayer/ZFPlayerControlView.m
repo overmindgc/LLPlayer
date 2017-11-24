@@ -884,7 +884,7 @@ static const CGFloat ZFPlayerControlBarAutoFadeOutTimeInterval = 0.35f;
         _subTitleswitchButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [_subTitleswitchButton setImage:ZFPlayerImage(@"LL_Switch_button_off") forState:UIControlStateNormal];
         [_subTitleswitchButton setImage:ZFPlayerImage(@"LL_Switch_button_on") forState:UIControlStateSelected];
-        [_subTitleswitchButton setTitle:@"字幕遮挡" forState:UIControlStateNormal];
+        [_subTitleswitchButton setTitle:@"MaskOn" forState:UIControlStateNormal];
         [_subTitleswitchButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         _subTitleswitchButton.titleLabel.font = [UIFont systemFontOfSize:11];
         _subTitleswitchButton.titleEdgeInsets = UIEdgeInsetsMake(0, -45, 0, 45);

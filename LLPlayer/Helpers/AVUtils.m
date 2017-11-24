@@ -99,7 +99,7 @@
         return;
     }
     //1 创建AVAsset实例 AVAsset包含了video的所有信息 self.videoUrl输入视频的路径
-    [SVProgressHUD showWithStatus:@"正在保存视频"];
+    [SVProgressHUD showWithStatus:@"Processing"];
     //封面图片
     NSDictionary *opts = [NSDictionary dictionaryWithObject:@(YES) forKey:AVURLAssetPreferPreciseDurationAndTimingKey];
 
@@ -183,7 +183,8 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             //这里是输出视频之后的操作，做你想做的
 //            [self cropExportDidFinish:exporter];
-            [SVProgressHUD dismiss];
+            [SVProgressHUD showSuccessWithStatus:@"Saved Success"];
+            [[NSNotificationCenter defaultCenter] postNotificationName:LLClipOrDubbingCreatedNotification object:nil];
         });
     }];
 }

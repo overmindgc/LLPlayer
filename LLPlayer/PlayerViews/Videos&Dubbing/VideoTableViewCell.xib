@@ -42,7 +42,7 @@
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="00:00" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tA1-tj-pBV">
-                        <rect key="frame" x="58.5" y="45" width="31.5" height="13.5"/>
+                        <rect key="frame" x="56.5" y="48" width="31.5" height="13.5"/>
                         <fontDescription key="fontDescription" type="system" pointSize="11"/>
                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <nil key="highlightedColor"/>
@@ -54,10 +54,10 @@
                     <constraint firstItem="DEX-9b-Ch4" firstAttribute="leading" secondItem="Lrs-Yk-VxB" secondAttribute="trailing" constant="8" id="4sd-qz-tP4"/>
                     <constraint firstAttribute="trailing" secondItem="DEX-9b-Ch4" secondAttribute="trailing" constant="16" id="Cmc-U5-Xm0"/>
                     <constraint firstItem="Pzy-ev-ogd" firstAttribute="top" secondItem="DEX-9b-Ch4" secondAttribute="bottom" constant="-1" id="DLm-Nh-Gzd"/>
-                    <constraint firstItem="Pzy-ev-ogd" firstAttribute="leading" secondItem="tA1-tj-pBV" secondAttribute="trailing" constant="13" id="GvN-ZT-6fU"/>
+                    <constraint firstItem="Pzy-ev-ogd" firstAttribute="leading" secondItem="tA1-tj-pBV" secondAttribute="trailing" constant="15" id="GvN-ZT-6fU"/>
                     <constraint firstItem="Pzy-ev-ogd" firstAttribute="leading" secondItem="Lrs-Yk-VxB" secondAttribute="trailing" constant="8" id="NSV-wg-vMZ"/>
                     <constraint firstAttribute="trailing" secondItem="Pzy-ev-ogd" secondAttribute="trailing" constant="16" id="TPe-e8-QO5"/>
-                    <constraint firstAttribute="bottom" secondItem="tA1-tj-pBV" secondAttribute="bottom" constant="6" id="Uue-r5-UEp"/>
+                    <constraint firstAttribute="bottom" secondItem="tA1-tj-pBV" secondAttribute="bottom" constant="3" id="Uue-r5-UEp"/>
                     <constraint firstItem="Lrs-Yk-VxB" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="5" id="qLL-MZ-JqQ"/>
                 </constraints>
             </tableViewCellContentView>
@@ -72,6 +72,6 @@
         </tableViewCell>
     </objects>
     <resources>
-        <image name="default_video" width="60" height="60"/>
+        <image name="default_video" width="60" height="45"/>
     </resources>
 </document>

@@ -32,8 +32,6 @@
 @property (weak, nonatomic) IBOutlet UILabel *startTimeLabel;
 @property (weak, nonatomic) IBOutlet UILabel *endTimeLabel;
 
-@property (weak, nonatomic) IBOutlet UIButton *saveBtn;
-
 @property (weak, nonatomic) IBOutlet AudioRecordControlView *recordControlView;
 
 @end
@@ -91,6 +89,9 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(startPlayOriginAction) name:LL_AUDIO_CONTROL_START_PLAY_ORIGIN object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(endPlayOriginAction) name:LL_AUDIO_CONTROL_END_PLAY_ORIGIN object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(saveClipAction) name:LL_AUDIO_CONTROL_SAVE_CLIP object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(saveDubbingAction) name:LL_AUDIO_CONTROL_SAVE_DUBBING object:nil];
 }
 
 // 返回值要必须为NO
@@ -249,7 +250,6 @@
                 }
                 //可录音
                 [self.recordControlView enabledControlWithInitStatus];
-                self.saveBtn.hidden = NO;
             }
             [self.playerView pause];
         }
@@ -257,7 +257,6 @@
         //如果取消选择
         [self.recordControlView disabledAll];
         [self.playerView clearRangeAPoint];
-        self.saveBtn.hidden = YES;
     }
 }
 
@@ -282,7 +281,6 @@
                 }
                 //可录音
                 [self.recordControlView enabledControlWithInitStatus];
-                self.saveBtn.hidden = NO;
             }
         }
         [self.playerView pause];
@@ -290,21 +288,30 @@
         //如果取消选择
         [self.recordControlView disabledAll];
         [self.playerView clearRangeBPoint];
-        self.saveBtn.hidden = YES;
     }
 }
 
-- (IBAction)saveClipAction:(id)sender
+- (void)saveClipAction
+{
+    [self saveClipOrDubbing:NO];
+}
+
+- (void)saveDubbingAction
+{
+    [self saveClipOrDubbing:YES];
+}
+
+- (void)saveClipOrDubbing:(BOOL)isDubbing
 {
     NSURL *recordUrl;
-    if (self.recordControlView.recordPlayButton.isEnabled) {
+    if (isDubbing) {
         recordUrl = [[AudioRecordClient defaultClient] getSavePath];
     }
     NSString *fileName;
     if (recordUrl) {
-        fileName = [NSString stringWithFormat:@"Dubbing_%0.f",[NSDate date].timeIntervalSince1970 * 1000];
+        fileName = [NSString stringWithFormat:@"Dubbing_%0.f",[NSDate date].timeIntervalSince1970];
     } else {
-        fileName = [NSString stringWithFormat:@"Clip_%0.f",[NSDate date].timeIntervalSince1970 * 1000];
+        fileName = [NSString stringWithFormat:@"Clip_%0.f",[NSDate date].timeIntervalSince1970];
     }
     [AVUtils goSaveVideoPath:self.videoURL
                withStartTime:self.playerView.rangeStartATime
