@@ -11,6 +11,8 @@
 		B71A1F171FB98C98008B26AD /* AudioRecordClient.m in Sources */ = {isa = PBXBuildFile; fileRef = B71A1F161FB98C98008B26AD /* AudioRecordClient.m */; };
 		B71A1F1B1FB99E7E008B26AD /* SpectrumView.m in Sources */ = {isa = PBXBuildFile; fileRef = B71A1F1A1FB99E7D008B26AD /* SpectrumView.m */; };
 		B71A1F281FBA9542008B26AD /* AudioRecordControlView.m in Sources */ = {isa = PBXBuildFile; fileRef = B71A1F271FBA9542008B26AD /* AudioRecordControlView.m */; };
+		B7315ECB1FCBB9090029D024 /* StaticConsts.m in Sources */ = {isa = PBXBuildFile; fileRef = B7315ECA1FCBB9090029D024 /* StaticConsts.m */; };
+		B7315ECE1FCBEFE40029D024 /* PerformanceMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = B7315ECC1FCBEFE40029D024 /* PerformanceMonitor.m */; };
 		B76066C81FAC554600231B10 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B76066C71FAC554600231B10 /* AppDelegate.m */; };
 		B76066CE1FAC554600231B10 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B76066CC1FAC554600231B10 /* Main.storyboard */; };
 		B76066D01FAC554600231B10 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B76066CF1FAC554600231B10 /* Assets.xcassets */; };
@@ -61,6 +63,10 @@
 		B71A1F1A1FB99E7D008B26AD /* SpectrumView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SpectrumView.m; sourceTree = "<group>"; };
 		B71A1F261FBA9542008B26AD /* AudioRecordControlView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AudioRecordControlView.h; sourceTree = "<group>"; };
 		B71A1F271FBA9542008B26AD /* AudioRecordControlView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AudioRecordControlView.m; sourceTree = "<group>"; };
+		B7315EC91FCBB9090029D024 /* StaticConsts.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StaticConsts.h; sourceTree = "<group>"; };
+		B7315ECA1FCBB9090029D024 /* StaticConsts.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = StaticConsts.m; sourceTree = "<group>"; };
+		B7315ECC1FCBEFE40029D024 /* PerformanceMonitor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PerformanceMonitor.m; sourceTree = "<group>"; };
+		B7315ECD1FCBEFE40029D024 /* PerformanceMonitor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PerformanceMonitor.h; sourceTree = "<group>"; };
 		B76066C31FAC554600231B10 /* LLPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LLPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B76066C61FAC554600231B10 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		B76066C71FAC554600231B10 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -344,6 +350,8 @@
 		B764A2551FB53A0B00B151E6 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				B7315EC91FCBB9090029D024 /* StaticConsts.h */,
+				B7315ECA1FCBB9090029D024 /* StaticConsts.m */,
 				B7C15D151FC80528006E2C36 /* ConstsMacros.h */,
 				B764A1ED1FAEC83000B151E6 /* Macros.h */,
 				B764A2001FAFFC7400B151E6 /* AVUtils.h */,
@@ -352,6 +360,8 @@
 				B764A21C1FB1BA5300B151E6 /* FileHelpers.m */,
 				B7BB80BD1FC2CCD1007CB4DB /* TimeUtils.h */,
 				B7BB80BE1FC2CCD1007CB4DB /* TimeUtils.m */,
+				B7315ECD1FCBEFE40029D024 /* PerformanceMonitor.h */,
+				B7315ECC1FCBEFE40029D024 /* PerformanceMonitor.m */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -528,11 +538,13 @@
 				B764A23F1FB4058C00B151E6 /* ZFPlayerModel.m in Sources */,
 				B764A1D31FAC6C7B00B151E6 /* MainNavViewController.m in Sources */,
 				B764A1E41FAEBDAC00B151E6 /* VideoTableViewCell.m in Sources */,
+				B7315ECB1FCBB9090029D024 /* StaticConsts.m in Sources */,
 				B764A2491FB4058C00B151E6 /* ASValuePopUpView.m in Sources */,
 				B764A1E81FAEC28300B151E6 /* VideoItemModel.m in Sources */,
 				B764A1DD1FAEB39A00B151E6 /* ConfigViewController.m in Sources */,
 				B7BB80BF1FC2CCD1007CB4DB /* TimeUtils.m in Sources */,
 				B764A2411FB4058C00B151E6 /* UIWindow+CurrentViewController.m in Sources */,
+				B7315ECE1FCBEFE40029D024 /* PerformanceMonitor.m in Sources */,
 				B7BB80CF1FC42A3A007CB4DB /* ZFSettingCell.m in Sources */,
 				B764A2541FB4371800B151E6 /* UINavigationController+ZFFullscreenPopGesture.m in Sources */,
 				B764A24A1FB4058C00B151E6 /* ZFPlayerControlView.m in Sources */,

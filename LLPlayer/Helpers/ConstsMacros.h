@@ -18,12 +18,4 @@
 #define RecordAudioFileName         @"recordCache.aac"
 #define DubbingVideoFolder          @"LLDubbing"
 
-/**
- * 事件常量
- */
-//文件变动事件
-#define LLFileChangedNotification           @"LLFileChangedNotification"
-//剪辑或者录音保存成功事件
-#define LLClipOrDubbingCreatedNotification  @"LLClipOrDubbingCreatedNotification"
-
 #endif /* ConstsMacros_h */

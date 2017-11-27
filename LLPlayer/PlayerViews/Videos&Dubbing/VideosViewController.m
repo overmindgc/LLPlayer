@@ -48,7 +48,22 @@ static NSString * tableCellIndentifer = @"TableCellIndentifer";
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
+    NSLog(@"A viewWillAppear");
+}
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    NSLog(@"A viewDidAppear");
+}
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    NSLog(@"A viewWillDisappear");
+}
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    NSLog(@"A viewDidDisappear");
 }
 
 - (void)didReceiveMemoryWarning {

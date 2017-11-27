@@ -8,6 +8,7 @@
 
 #import "AppDelegate.h"
 #import <SVProgressHUD/SVProgressHUD.h>
+#import "PerformanceMonitor.h"
 
 @interface AppDelegate ()
 
@@ -20,6 +21,7 @@
     // Override point for customization after application launch.
     [SVProgressHUD setDefaultMaskType:SVProgressHUDMaskTypeBlack];
     [SVProgressHUD setMaximumDismissTimeInterval:1];
+    [[PerformanceMonitor sharedInstance] start];
     return YES;
 }
 

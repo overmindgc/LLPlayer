@@ -81,7 +81,7 @@
                                 itemModel.thumbImage = [AVUtils getVideoThumbImage:itemModel.videoAsset];
                             }
                         }
-                        dispatch_sync(dispatch_get_main_queue(), ^{
+                        dispatch_async(dispatch_get_main_queue(), ^{
                             completeBlock(modelArray);
                         });
                     });

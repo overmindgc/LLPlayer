@@ -50,7 +50,19 @@
         self.isPlaying = NO;
         self.playerView.playerPushedOrPresented = NO;
     }
+    NSLog(@"B viewWillAppear");
 }
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    NSLog(@"B viewDidAppear");
+}
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    NSLog(@"B viewDidDisappear");
+}   
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
@@ -61,6 +73,7 @@
         //        [self.playerView pause];
         self.playerView.playerPushedOrPresented = YES;
     }
+    NSLog(@"B viewWillDisappear");
 }
 
 - (void)viewDidLoad {
