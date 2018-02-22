@@ -26,6 +26,7 @@
 #import <MediaPlayer/MediaPlayer.h>
 #import "UIView+CustomControlView.h"
 #import "MMMaterialDesignSpinner.h"
+#import "ZFMaskControlView.h"
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored"-Wdeprecated-declarations"
@@ -89,6 +90,7 @@ static const CGFloat ZFPlayerControlBarAutoFadeOutTimeInterval = 0.35f;
 @property (nonatomic, strong) UIProgressView          *bottomProgressView;
 /** 字幕开关按钮*/
 @property (nonatomic, strong) UIButton                *subTitleswitchButton;
+@property (nonatomic, strong) ZFMaskControlView       *maskControlView;
 
 /** 分辨率的名称 */
 @property (nonatomic, strong) NSArray                 *resolutionArray;
@@ -143,6 +145,7 @@ static const CGFloat ZFPlayerControlBarAutoFadeOutTimeInterval = 0.35f;
         [self addSubview:self.bottomProgressView];
         
         [self addSubview:self.subTitleswitchButton];
+        [self addSubview:self.maskControlView];
         
         // 添加子控件的约束
         [self makeSubViewsConstraints];
@@ -155,7 +158,9 @@ static const CGFloat ZFPlayerControlBarAutoFadeOutTimeInterval = 0.35f;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appDidEnterBackground) name:UIApplicationWillResignActiveNotification object:nil];
         // app进入前台
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appDidEnterPlayground) name:UIApplicationDidBecomeActiveNotification object:nil];
-
+        //字幕遮罩配置调整
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(zf_maskConfigChange:) name:ZF_MASK_CHANGE_CONFIG_NOTIFICATION object:nil];
+        
         [self listeningRotating];
     }
     return self;
@@ -309,6 +314,13 @@ static const CGFloat ZFPlayerControlBarAutoFadeOutTimeInterval = 0.35f;
     [self.subTitleswitchButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.trailing.mas_equalTo(-10);
         make.centerY.mas_equalTo(self.backBtn.mas_centerY);
+    }];
+    
+    [self.maskControlView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.subTitleswitchButton.mas_bottom).offset(5);
+        make.trailing.mas_equalTo(0);
+        make.width.mas_offset(95);
+        make.height.mas_equalTo(120);
     }];
 }
 
@@ -469,7 +481,7 @@ static const CGFloat ZFPlayerControlBarAutoFadeOutTimeInterval = 0.35f;
 - (void)subTitleSwitchBtnClick:(UIButton *)sender {
     UIButton *currBtn = (UIButton *)sender;
     currBtn.selected = !currBtn.selected;
-    
+    self.maskControlView.hidden = !currBtn.selected;
     if ([self.delegate respondsToSelector:@selector(zf_controlView:subTitleMaskSwitchAction:)]) {
         [self.delegate zf_controlView:self subTitleMaskSwitchAction:sender];
     }
@@ -565,6 +577,7 @@ static const CGFloat ZFPlayerControlBarAutoFadeOutTimeInterval = 0.35f;
     ZFPlayerShared.isStatusBarHidden = NO;
     
     self.subTitleswitchButton.alpha = 1;
+    self.maskControlView.alpha = 1;
 }
 
 - (void)hideControlView {
@@ -582,6 +595,7 @@ static const CGFloat ZFPlayerControlBarAutoFadeOutTimeInterval = 0.35f;
     }
     
     self.subTitleswitchButton.alpha = 0;
+    self.maskControlView.alpha = 0;
 }
 
 /**
@@ -895,6 +909,15 @@ static const CGFloat ZFPlayerControlBarAutoFadeOutTimeInterval = 0.35f;
     return _subTitleswitchButton;
 }
 
+- (ZFMaskControlView *)maskControlView
+{
+    if (!_maskControlView) {
+        _maskControlView = [[ZFMaskControlView alloc] init];
+        _maskControlView.hidden = YES;
+    }
+    return _maskControlView;
+}
+
 #pragma mark - UIGestureRecognizerDelegate
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
@@ -1194,6 +1217,11 @@ static const CGFloat ZFPlayerControlBarAutoFadeOutTimeInterval = 0.35f;
 /** 下载按钮状态 */
 - (void)zf_playerDownloadBtnState:(BOOL)state {
     self.downLoadBtn.enabled = state;
+}
+
+- (void)zf_maskConfigChange:(NSNotification *)notification
+{
+    
 }
 
 #pragma clang diagnostic pop

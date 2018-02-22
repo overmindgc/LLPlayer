@@ -52,6 +52,7 @@
 		B7BB80CE1FC42A3A007CB4DB /* ZFSettingItem.m in Sources */ = {isa = PBXBuildFile; fileRef = B7BB80C61FC42A3A007CB4DB /* ZFSettingItem.m */; };
 		B7BB80CF1FC42A3A007CB4DB /* ZFSettingCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B7BB80CA1FC42A3A007CB4DB /* ZFSettingCell.m */; };
 		B7BB80D21FC7C19E007CB4DB /* FileService.m in Sources */ = {isa = PBXBuildFile; fileRef = B7BB80D11FC7C19E007CB4DB /* FileService.m */; };
+		F97031CE203E9E0700E94308 /* ZFMaskControlView.m in Sources */ = {isa = PBXBuildFile; fileRef = F97031CD203E9E0700E94308 /* ZFMaskControlView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -148,6 +149,8 @@
 		B7BB80D11FC7C19E007CB4DB /* FileService.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FileService.m; sourceTree = "<group>"; };
 		B7C15D151FC80528006E2C36 /* ConstsMacros.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ConstsMacros.h; sourceTree = "<group>"; };
 		E1C7C783CAC93DA4B77A5503 /* Pods-LLPlayer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LLPlayer.debug.xcconfig"; path = "Pods/Target Support Files/Pods-LLPlayer/Pods-LLPlayer.debug.xcconfig"; sourceTree = "<group>"; };
+		F97031CC203E9E0700E94308 /* ZFMaskControlView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZFMaskControlView.h; sourceTree = "<group>"; };
+		F97031CD203E9E0700E94308 /* ZFMaskControlView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZFMaskControlView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -303,6 +306,8 @@
 				B764A23B1FB4058C00B151E6 /* ZFPlayerView.m */,
 				B764A2211FB4058C00B151E6 /* ZFPlayerControlView.h */,
 				B764A23A1FB4058C00B151E6 /* ZFPlayerControlView.m */,
+				F97031CC203E9E0700E94308 /* ZFMaskControlView.h */,
+				F97031CD203E9E0700E94308 /* ZFMaskControlView.m */,
 				B764A2341FB4058C00B151E6 /* ASValueTrackingSlider.h */,
 				B764A23E1FB4058C00B151E6 /* ASValueTrackingSlider.m */,
 				B764A2221FB4058C00B151E6 /* ASValuePopUpView.h */,
@@ -565,6 +570,7 @@
 				B7BB80CD1FC42A3A007CB4DB /* ZFSettingGroup.m in Sources */,
 				B764A1D01FAC650A00B151E6 /* MainTabBarViewController.m in Sources */,
 				B764A2401FB4058C00B151E6 /* UITabBarController+ZFPlayerRotation.m in Sources */,
+				F97031CE203E9E0700E94308 /* ZFMaskControlView.m in Sources */,
 				B71A1F171FB98C98008B26AD /* AudioRecordClient.m in Sources */,
 				B764A2021FAFFC7400B151E6 /* AVUtils.m in Sources */,
 				B764A2461FB4058C00B151E6 /* UIViewController+ZFPlayerRotation.m in Sources */,

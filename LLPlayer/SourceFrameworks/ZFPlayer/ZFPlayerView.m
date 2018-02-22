@@ -1545,11 +1545,19 @@ typedef NS_ENUM(NSInteger, PanDirection){
     UIVisualEffectView *blueMaskView = [[UIVisualEffectView alloc] initWithEffect:effect];
     blueMaskView.hidden = YES;
     [self addSubview:blueMaskView];
+    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults objectForKey:ZF_MASK_HEIGHT_KEY];
+    //2.35:1
+    CGFloat defaultHeight = [[defaults objectForKey:ZF_MASK_HEIGHT_KEY] floatValue];
+    if (defaultHeight <= 0) {
+        defaultHeight = ZF_MASK_DEFAULT_HEIGHT;
+    }
     [blueMaskView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self).offset(0);
         make.right.mas_equalTo(self).offset(0);
         make.bottom.mas_equalTo(self).offset(0);
-        make.height.mas_equalTo(@50);
+        make.height.mas_equalTo(defaultHeight);
     }];
     _blurMaskView = blueMaskView;
 }
