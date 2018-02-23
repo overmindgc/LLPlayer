@@ -204,6 +204,11 @@ typedef NS_ENUM(NSInteger, PanDirection){
                                              selector:@selector(onStatusBarOrientationChange)
                                                  name:UIApplicationDidChangeStatusBarOrientationNotification
                                                object:nil];
+    //监听遮罩样式切换
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(changeMaskStyle:)
+                                                 name:ZF_MASK_CHANGE_CONFIG_NOTIFICATION
+                                               object:nil];
 }
 
 #pragma mark - layoutSubviews
@@ -230,15 +235,16 @@ typedef NS_ENUM(NSInteger, PanDirection){
 }
 
 - (void)playerControlView:(UIView *)controlView playerModel:(ZFPlayerModel *)playerModel {
-    if (playerModel.isEnableSubTitleMask) {
-        [self setBlurMaskView];
-    }
     if (!controlView) {
         // 指定默认控制层
         ZFPlayerControlView *defaultControlView = [[ZFPlayerControlView alloc] init];
         self.controlView = defaultControlView;
     } else {
         self.controlView = controlView;
+    }
+    if (playerModel.isEnableSubTitleMask) {
+        [self setBlurMaskView];
+        _blurMaskView.hidden = YES;
     }
     self.playerModel = playerModel;
 }
@@ -1541,25 +1547,69 @@ typedef NS_ENUM(NSInteger, PanDirection){
 }
 
 - (void)setBlurMaskView {
-    UIBlurEffect *effect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
-    UIVisualEffectView *blueMaskView = [[UIVisualEffectView alloc] initWithEffect:effect];
-    blueMaskView.hidden = YES;
-    [self addSubview:blueMaskView];
-    
+    if (_blurMaskView) {
+        [_blurMaskView removeFromSuperview];
+        _blurMaskView = nil;
+    }
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    [defaults objectForKey:ZF_MASK_HEIGHT_KEY];
+    if (![defaults objectForKey:ZF_MASK_STYLE_KEY]) {
+        [defaults setObject:[NSNumber numberWithInteger:UIBlurEffectStyleLight] forKey:ZF_MASK_STYLE_KEY];
+    }
+    
+    UIBlurEffect *effect = [UIBlurEffect effectWithStyle:[[defaults objectForKey:ZF_MASK_STYLE_KEY] integerValue]];
+    _blurMaskView = [[UIVisualEffectView alloc] initWithEffect:effect];
+    [self insertSubview:_blurMaskView belowSubview:self.controlView];
+    
     //2.35:1
     CGFloat defaultHeight = [[defaults objectForKey:ZF_MASK_HEIGHT_KEY] floatValue];
     if (defaultHeight <= 0) {
-        defaultHeight = ZF_MASK_DEFAULT_HEIGHT;
+        if (SCREE_WIDTH < SCREE_HEIGHT) {
+            defaultHeight = (SCREE_WIDTH - SCREE_HEIGHT / 2.35) / 2;
+        } else {
+            defaultHeight = (SCREE_HEIGHT - SCREE_WIDTH / 2.35) / 2;
+        }
+        [defaults setObject:@(defaultHeight) forKey:ZF_MASK_HEIGHT_KEY];
     }
-    [blueMaskView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self).offset(0);
-        make.right.mas_equalTo(self).offset(0);
-        make.bottom.mas_equalTo(self).offset(0);
+    CGFloat leftPadding = [[defaults objectForKey:ZF_MASK_LEFT_RIGHT_KEY] floatValue];
+    CGFloat bottomPadding = [[defaults objectForKey:ZF_MASK_BOTTOM_KEY] floatValue];
+    if (leftPadding <= 0) {
+        leftPadding = 0;
+        [defaults setObject:@(0) forKey:ZF_MASK_LEFT_RIGHT_KEY];
+    }
+    if (bottomPadding <= 0) {
+        bottomPadding = 0;
+        [defaults setObject:@(0) forKey:ZF_MASK_BOTTOM_KEY];
+    }
+    [_blurMaskView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self).offset(leftPadding);
+        make.right.mas_equalTo(self).offset(-leftPadding);
+        make.bottom.mas_equalTo(self).offset(-bottomPadding);
         make.height.mas_equalTo(defaultHeight);
     }];
-    _blurMaskView = blueMaskView;
+}
+
+- (void)changeMaskStyle:(NSNotification *)notification
+{
+    NSDictionary *userInfo = notification.userInfo;
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    if ([[userInfo valueForKey:@"type"] isEqualToString:ZF_MASK_STYLE_KEY]) {
+        if ([[userInfo valueForKey:@"value"] isEqualToString:@"black"]) {
+            [defaults setObject:[NSNumber numberWithInteger:UIBlurEffectStyleDark] forKey:ZF_MASK_STYLE_KEY];
+        } else if ([[userInfo valueForKey:@"value"] isEqualToString:@"white"]) {
+            [defaults setObject:[NSNumber numberWithInteger:UIBlurEffectStyleLight] forKey:ZF_MASK_STYLE_KEY];
+        }
+        [self setBlurMaskView];
+    } else {
+        CGFloat newHeight = [[defaults objectForKey:ZF_MASK_HEIGHT_KEY] floatValue];
+        CGFloat leftPadding = [[defaults objectForKey:ZF_MASK_LEFT_RIGHT_KEY] floatValue];
+        CGFloat bottomPadding = [[defaults objectForKey:ZF_MASK_BOTTOM_KEY] floatValue];
+        [_blurMaskView mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(self).offset(leftPadding);
+            make.right.mas_equalTo(self).offset(-leftPadding);
+            make.bottom.mas_equalTo(self).offset(-bottomPadding);
+            make.height.mas_equalTo(newHeight);
+        }];
+    }
 }
 
 - (void)setPlayerModel:(ZFPlayerModel *)playerModel {

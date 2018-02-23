@@ -43,7 +43,6 @@
 
 #define ZFPlayerOrientationIsPortrait       UIDeviceOrientationIsPortrait([UIDevice currentDevice].orientation)
 
-#define ZF_MASK_DEFAULT_HEIGHT  (SCREE_WIDTH - SCREE_HEIGHT / 2.35) / 2
 #define ZF_MASK_HEIGHT_KEY      @"zfMaskHeightKey"      //高度缓存的key
 #define ZF_MASK_LEFT_RIGHT_KEY  @"zfMaskLeftRightKey"   //左右边距缓存的key
 #define ZF_MASK_BOTTOM_KEY      @"zfMaskBottomKey"      //底部边距缓存的key

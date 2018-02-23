@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ZFPlayer.h"
 
 @interface ZFMaskControlView : UIView
 

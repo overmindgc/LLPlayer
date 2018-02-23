@@ -158,8 +158,6 @@ static const CGFloat ZFPlayerControlBarAutoFadeOutTimeInterval = 0.35f;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appDidEnterBackground) name:UIApplicationWillResignActiveNotification object:nil];
         // app进入前台
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appDidEnterPlayground) name:UIApplicationDidBecomeActiveNotification object:nil];
-        //字幕遮罩配置调整
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(zf_maskConfigChange:) name:ZF_MASK_CHANGE_CONFIG_NOTIFICATION object:nil];
         
         [self listeningRotating];
     }
@@ -1217,11 +1215,6 @@ static const CGFloat ZFPlayerControlBarAutoFadeOutTimeInterval = 0.35f;
 /** 下载按钮状态 */
 - (void)zf_playerDownloadBtnState:(BOOL)state {
     self.downLoadBtn.enabled = state;
-}
-
-- (void)zf_maskConfigChange:(NSNotification *)notification
-{
-    
 }
 
 #pragma clang diagnostic pop
