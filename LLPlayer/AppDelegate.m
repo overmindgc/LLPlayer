@@ -9,6 +9,7 @@
 #import "AppDelegate.h"
 #import <SVProgressHUD/SVProgressHUD.h>
 #import "PerformanceMonitor.h"
+#import <AVFoundation/AVFoundation.h>
 
 @interface AppDelegate ()
 
@@ -22,6 +23,16 @@
     [SVProgressHUD setDefaultMaskType:SVProgressHUDMaskTypeBlack];
     [SVProgressHUD setMaximumDismissTimeInterval:1];
     [[PerformanceMonitor sharedInstance] start];
+    
+    //监听系统声音
+    AVAudioSession *session = [AVAudioSession sharedInstance];
+    [session setCategory:AVAudioSessionCategoryAmbient error:nil];//重点方法
+    [session setActive:YES error:nil];
+    NSError *error;
+    [[AVAudioSession sharedInstance] setActive:YES error:&error];
+    //注，ios9上不加这一句会无效
+    [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
+    
     return YES;
 }
 

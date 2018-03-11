@@ -44,9 +44,9 @@
 
 - (void)configUI
 {
-    CGFloat lineHeight = 30;
+    CGFloat lineHeight = 55;
     CGFloat textWidth = 30;
-    CGFloat btnWidth = 25;
+    CGFloat btnWidth = 50;
     CGFloat paddingTop = 0;
     self.styleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, paddingTop, textWidth, lineHeight)];
     self.styleLabel.text = @"样式";

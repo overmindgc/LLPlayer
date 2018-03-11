@@ -49,6 +49,7 @@
 #define ZF_MASK_STYLE_KEY       @"zfMaskStyleKey"       //样式缓存的key
 
 #define ZF_MASK_CHANGE_CONFIG_NOTIFICATION       @"zfMaskChangeConfigNoticifation"       //修改配置信息通知
+#define ZF_MASK_SHOW_HIDE_NOTIFICATION       @"zfMaskShowHideNoticifation"       //字幕遮罩显示和隐藏通知，用于同步修改开关状态
 
 #import "ZFPlayerView.h"
 #import "ZFPlayerModel.h"

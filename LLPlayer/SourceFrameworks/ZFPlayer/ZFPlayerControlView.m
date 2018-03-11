@@ -159,7 +159,14 @@ static const CGFloat ZFPlayerControlBarAutoFadeOutTimeInterval = 0.35f;
         // app进入前台
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appDidEnterPlayground) name:UIApplicationDidBecomeActiveNotification object:nil];
         
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(onStatusBarOrientationChange)
+                                                     name:UIApplicationDidChangeStatusBarOrientationNotification
+                                                   object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(blurMaskViewHiddenChange:) name:ZF_MASK_SHOW_HIDE_NOTIFICATION object:nil];
+        
         [self listeningRotating];
+        
     }
     return self;
 }
@@ -307,6 +314,7 @@ static const CGFloat ZFPlayerControlBarAutoFadeOutTimeInterval = 0.35f;
     [self.bottomProgressView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.leading.trailing.mas_offset(0);
         make.bottom.mas_offset(0);
+        make.height.mas_offset(1);
     }];
     
     [self.subTitleswitchButton mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -317,8 +325,8 @@ static const CGFloat ZFPlayerControlBarAutoFadeOutTimeInterval = 0.35f;
     [self.maskControlView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.subTitleswitchButton.mas_bottom).offset(5);
         make.trailing.mas_equalTo(0);
-        make.width.mas_offset(95);
-        make.height.mas_equalTo(120);
+        make.width.mas_offset(150);
+        make.height.mas_equalTo(260);
     }];
 }
 
@@ -483,6 +491,12 @@ static const CGFloat ZFPlayerControlBarAutoFadeOutTimeInterval = 0.35f;
     if ([self.delegate respondsToSelector:@selector(zf_controlView:subTitleMaskSwitchAction:)]) {
         [self.delegate zf_controlView:self subTitleMaskSwitchAction:sender];
     }
+}
+
+- (void)blurMaskViewHiddenChange:(NSNotification *)notification
+{
+//    BOOL isHidden = [[notification.userInfo valueForKey:@"isHidden"] boolValue];
+    [self.subTitleswitchButton sendActionsForControlEvents:UIControlEventTouchUpInside];
 }
 
 /**
@@ -901,6 +915,7 @@ static const CGFloat ZFPlayerControlBarAutoFadeOutTimeInterval = 0.35f;
         _subTitleswitchButton.titleLabel.font = [UIFont systemFontOfSize:11];
         _subTitleswitchButton.titleEdgeInsets = UIEdgeInsetsMake(0, -45, 0, 45);
         _subTitleswitchButton.imageEdgeInsets = UIEdgeInsetsMake(0, 42, 0, -42);
+        _subTitleswitchButton.hidden = YES;
         [_subTitleswitchButton addTarget:self action:@selector(subTitleSwitchBtnClick:) forControlEvents:UIControlEventTouchUpInside];
         
     }
@@ -1215,6 +1230,19 @@ static const CGFloat ZFPlayerControlBarAutoFadeOutTimeInterval = 0.35f;
 /** 下载按钮状态 */
 - (void)zf_playerDownloadBtnState:(BOOL)state {
     self.downLoadBtn.enabled = state;
+}
+
+// 状态条变化通知（在前台播放才去处理）
+- (void)onStatusBarOrientationChange {
+    // 获取到当前状态条的方向
+    UIInterfaceOrientation currentOrientation = [UIApplication sharedApplication].statusBarOrientation;
+    if (currentOrientation == UIInterfaceOrientationPortrait) {
+        self.subTitleswitchButton.hidden = YES;
+        self.maskControlView.hidden = YES;
+    } else {
+        self.subTitleswitchButton.hidden = NO;
+        self.maskControlView.hidden = !self.subTitleswitchButton.isSelected;
+    }
 }
 
 #pragma clang diagnostic pop

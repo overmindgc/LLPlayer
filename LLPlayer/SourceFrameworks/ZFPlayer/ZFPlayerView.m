@@ -121,6 +121,9 @@ typedef NS_ENUM(NSInteger, PanDirection){
 @property (nonatomic, strong) NSURL                  *videoURL;
 @property (nonatomic, strong) NSDictionary           *resolutionDic;
 
+@property (nonatomic) float lastSystemVolume; //记录之前的系统音量，用于还原
+@property (nonatomic) BOOL isChangeVolumeMoving; //是否在调整音量的手势下
+
 @end
 
 @implementation ZFPlayerView
@@ -192,6 +195,8 @@ typedef NS_ENUM(NSInteger, PanDirection){
     
     // 监听耳机插入和拔掉通知
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(audioRouteChangeListenerCallback:) name:AVAudioSessionRouteChangeNotification object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(volumeChanged:) name:@"AVSystemController_SystemVolumeDidChangeNotification" object:nil];
     
     // 监测设备方向
     [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
@@ -342,6 +347,7 @@ typedef NS_ENUM(NSInteger, PanDirection){
     if (self.state == ZFPlayerStatePause) { self.state = ZFPlayerStatePlaying; }
     self.isPauseByUser = NO;
     [_player play];
+    [self becomeFirstResponder];
 }
 
 /**
@@ -352,6 +358,7 @@ typedef NS_ENUM(NSInteger, PanDirection){
     if (self.state == ZFPlayerStatePlaying) { self.state = ZFPlayerStatePause;}
     self.isPauseByUser = YES;
     [_player pause];
+    [self becomeFirstResponder];
 }
 
 #pragma mark - Private Method
@@ -478,11 +485,15 @@ typedef NS_ENUM(NSInteger, PanDirection){
  *  获取系统音量
  */
 - (void)configureVolume {
-    MPVolumeView *volumeView = [[MPVolumeView alloc] init];
+    //把系统的音量控制显示移到屏幕外，达到隐藏效果
+    MPVolumeView *volumeView = [[MPVolumeView alloc] initWithFrame:CGRectMake(-20, -20, 10, 10)];
+    volumeView.hidden = NO;
+    [self addSubview:volumeView];
     _volumeViewSlider = nil;
     for (UIView *view in [volumeView subviews]){
         if ([view.class.description isEqualToString:@"MPVolumeSlider"]){
             _volumeViewSlider = (UISlider *)view;
+            self.lastSystemVolume = [[AVAudioSession sharedInstance] outputVolume];
             break;
         }
     }
@@ -509,6 +520,7 @@ typedef NS_ENUM(NSInteger, PanDirection){
             
         case AVAudioSessionRouteChangeReasonNewDeviceAvailable:
             // 耳机插入
+            [self becomeFirstResponder];
             break;
             
         case AVAudioSessionRouteChangeReasonOldDeviceUnavailable:
@@ -523,6 +535,88 @@ typedef NS_ENUM(NSInteger, PanDirection){
             // called at start - also when other audio wants to play
             NSLog(@"AVAudioSessionRouteChangeReasonCategoryChange");
             break;
+    }
+}
+
+//系统声音改变
+
+-(void)volumeChanged:(NSNotification *)notification
+{
+    float volume = [[[notification userInfo] objectForKey:@"AVSystemController_AudioVolumeNotificationParameter"] doubleValue];
+    NSLog(@"FlyElephant-系统音量:%f", volume);
+    if (volume != self.lastSystemVolume) {
+        if (!self.isChangeVolumeMoving) {
+            CMTime currTime = self.player.currentTime;
+            float currSec = CMTimeGetSeconds(currTime);
+            if (volume > self.lastSystemVolume) {
+                NSLog(@"音量加");
+                currSec += 5;
+            } else {
+                NSLog(@"音量减");
+                currSec -= 5;
+                if (currSec < 0) {
+                    currSec = 0;
+                }
+            }
+            __weak typeof(self) weakSelf = self;
+            [self jumpToPlayTime:currSec completionHandler:^(BOOL finished) {
+                [weakSelf play];
+            }];
+            self.volumeViewSlider.value = self.lastSystemVolume;
+        }
+    }
+}
+
+//必须能成为第一响应者，才能拦截线控事件
+- (BOOL)canBecomeFirstResponder
+{
+    return YES;
+}
+
+//received remote event
+- (void)remoteControlReceivedWithEvent:(UIEvent *)event
+{
+    NSLog(@"event tyipe:::%ld   subtype:::%ld",(long)event.type,(long)event.subtype);
+    //type==2  subtype==单击暂停键：103，双击暂停键104
+    if (event.type == UIEventTypeRemoteControl) {
+        switch (event.subtype) {
+
+            case UIEventSubtypeRemoteControlPlay:{
+                NSLog(@"play---------");
+            }break;
+            case UIEventSubtypeRemoteControlPause:{
+                NSLog(@"Pause---------");
+            }break;
+            case UIEventSubtypeRemoteControlStop:{
+                NSLog(@"Stop---------");
+            }break;
+            case UIEventSubtypeRemoteControlTogglePlayPause:{
+                //单击暂停键：103
+                NSLog(@"单击暂停键：103");
+                if (self.state == ZFPlayerStatePlaying) {
+                    [self pause];
+                } else if (self.state == ZFPlayerStatePause || self.state == ZFPlayerStateStopped) {
+                    [self play];
+                }
+            }break;
+            case UIEventSubtypeRemoteControlNextTrack:{
+                //双击暂停键：104
+                NSLog(@"双击暂停键：104");
+                self.blurMaskView.hidden = !self.blurMaskView.hidden;
+                [[NSNotificationCenter defaultCenter] postNotificationName:ZF_MASK_SHOW_HIDE_NOTIFICATION object:nil userInfo:@{@"isHidden":@(self.blurMaskView.hidden)}];
+            }break;
+            case UIEventSubtypeRemoteControlPreviousTrack:{
+                NSLog(@"三击暂停键：105");
+            }break;
+            case UIEventSubtypeRemoteControlBeginSeekingForward:{
+                NSLog(@"单击，再按下不放：108");
+            }break;
+            case UIEventSubtypeRemoteControlEndSeekingForward:{
+                NSLog(@"单击，再按下不放，松开时：109");
+            }break;
+            default:
+                break;
+        }
     }
 }
 
@@ -823,6 +917,7 @@ typedef NS_ENUM(NSInteger, PanDirection){
 // 状态条变化通知（在前台播放才去处理）
 - (void)onStatusBarOrientationChange {
     if (!self.didEnterBackground) {
+        [self becomeFirstResponder];
         // 获取到当前状态条的方向
         UIInterfaceOrientation currentOrientation = [UIApplication sharedApplication].statusBarOrientation;
         if (currentOrientation == UIInterfaceOrientationPortrait) {
@@ -1285,8 +1380,10 @@ typedef NS_ENUM(NSInteger, PanDirection){
                 // 开始滑动的时候,状态改为正在控制音量
                 if (locationPoint.x > self.bounds.size.width / 2) {
                     self.isVolume = YES;
+                    self.isChangeVolumeMoving = YES;
                 }else { // 状态改为显示亮度调节
                     self.isVolume = NO;
+                    self.isChangeVolumeMoving = NO;
                 }
             }
             break;
@@ -1299,6 +1396,7 @@ typedef NS_ENUM(NSInteger, PanDirection){
                 }
                 case PanDirectionVerticalMoved:{
                     [self verticalMoved:veloctyPoint.y]; // 垂直移动方法只要y方向的值
+                    self.isChangeVolumeMoving = YES;
                     break;
                 }
                 default:
@@ -1320,11 +1418,16 @@ typedef NS_ENUM(NSInteger, PanDirection){
                 case PanDirectionVerticalMoved:{
                     // 垂直移动结束后，把状态改为不再控制音量
                     self.isVolume = NO;
+                    self.isChangeVolumeMoving = NO;
                     break;
                 }
                 default:
                     break;
             }
+            break;
+        }
+        case UIGestureRecognizerStateCancelled:{ // 移动取消
+            self.isChangeVolumeMoving = NO;
             break;
         }
         default:
@@ -1338,7 +1441,13 @@ typedef NS_ENUM(NSInteger, PanDirection){
  *  @param value void
  */
 - (void)verticalMoved:(CGFloat)value {
-    self.isVolume ? (self.volumeViewSlider.value -= value / 10000) : ([UIScreen mainScreen].brightness -= value / 10000);
+//    self.isVolume ? (self.volumeViewSlider.value -= value / 10000) : ([UIScreen mainScreen].brightness -= value / 10000);
+    if (self.isVolume) {
+        (self.volumeViewSlider.value -= value / 10000);
+        self.lastSystemVolume = self.volumeViewSlider.value;
+    } else {
+        ([UIScreen mainScreen].brightness -= value / 10000);
+    }
 }
 
 /**
