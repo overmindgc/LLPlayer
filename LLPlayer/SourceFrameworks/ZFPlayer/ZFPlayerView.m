@@ -196,7 +196,7 @@ typedef NS_ENUM(NSInteger, PanDirection){
     // 监听耳机插入和拔掉通知
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(audioRouteChangeListenerCallback:) name:AVAudioSessionRouteChangeNotification object:nil];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(volumeChanged:) name:@"AVSystemController_SystemVolumeDidChangeNotification" object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(volumeChanged:) name:@"AVSystemController_SystemVolumeDidChangeNotification" object:nil];
     
     // 监测设备方向
     [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
@@ -413,7 +413,7 @@ typedef NS_ENUM(NSInteger, PanDirection){
     [self createTimer];
     
     // 获取系统音量
-    [self configureVolume];
+//    [self configureVolume];
     
     // 本地文件不设置ZFPlayerStateBuffering状态
     if ([self.videoURL.scheme isEqualToString:@"file"]) {
@@ -482,7 +482,7 @@ typedef NS_ENUM(NSInteger, PanDirection){
 }
 
 /**
- *  获取系统音量
+ *  获取系统音量 （配合音量加减的功能，暂时不调用）
  */
 - (void)configureVolume {
     //把系统的音量控制显示移到屏幕外，达到隐藏效果
@@ -538,7 +538,7 @@ typedef NS_ENUM(NSInteger, PanDirection){
     }
 }
 
-//系统声音改变
+//系统声音改变（有bug，暂时不监听响应）
 
 -(void)volumeChanged:(NSNotification *)notification
 {
@@ -593,17 +593,17 @@ typedef NS_ENUM(NSInteger, PanDirection){
             case UIEventSubtypeRemoteControlTogglePlayPause:{
                 //单击暂停键：103
                 NSLog(@"单击暂停键：103");
+                self.blurMaskView.hidden = !self.blurMaskView.hidden;
+                [[NSNotificationCenter defaultCenter] postNotificationName:ZF_MASK_SHOW_HIDE_NOTIFICATION object:nil userInfo:@{@"isHidden":@(self.blurMaskView.hidden)}];
+            }break;
+            case UIEventSubtypeRemoteControlNextTrack:{
+                //双击暂停键：104
+                NSLog(@"双击暂停键：104");
                 if (self.state == ZFPlayerStatePlaying) {
                     [self pause];
                 } else if (self.state == ZFPlayerStatePause || self.state == ZFPlayerStateStopped) {
                     [self play];
                 }
-            }break;
-            case UIEventSubtypeRemoteControlNextTrack:{
-                //双击暂停键：104
-                NSLog(@"双击暂停键：104");
-                self.blurMaskView.hidden = !self.blurMaskView.hidden;
-                [[NSNotificationCenter defaultCenter] postNotificationName:ZF_MASK_SHOW_HIDE_NOTIFICATION object:nil userInfo:@{@"isHidden":@(self.blurMaskView.hidden)}];
             }break;
             case UIEventSubtypeRemoteControlPreviousTrack:{
                 NSLog(@"三击暂停键：105");

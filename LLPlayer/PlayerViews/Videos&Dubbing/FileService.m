@@ -39,7 +39,7 @@
         //    NSLog(@"%@", fileArray);
         //    NSArray <NSFileAttributeKey,id> *attrArray = [fileManager attributesOfItemAtPath:filePath error:&error];
         //    NSLog(@"%@", attrArray);
-        NSMutableArray *modelArray = [NSMutableArray array];
+        NSMutableArray<VideoItemModel *> *modelArray = [NSMutableArray array];
         for (NSString *fileName in fileArray) {
             if (!isDubbing) {
                 if ([fileName isEqualToString:DubbingVideoFolder]) {
@@ -71,6 +71,11 @@
             }
             [modelArray addObject:model];
         }
+        //根据文件名升序排序
+        [modelArray sortUsingComparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
+            return ((VideoItemModel *)obj1).name > ((VideoItemModel *)obj2).name;
+        }];
+        
         dispatch_sync(dispatch_get_main_queue(), ^{
             if (completeBlock) {
                 completeBlock(modelArray);
