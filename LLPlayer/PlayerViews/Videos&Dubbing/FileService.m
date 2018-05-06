@@ -33,6 +33,8 @@
         if (isDubbing) {
             filePath = [NSString stringWithFormat:@"%@/%@",filePath,DubbingVideoFolder];
         }
+        NSString *lastName = [[NSUserDefaults standardUserDefaults] objectForKey:LastOpenVideoFileName];
+        
         NSError *error;
         // 获取指定路径对应文件夹下的所有文件
         NSArray <NSString *> *fileArray = [fileManager contentsOfDirectoryAtPath:filePath error:&error];
@@ -68,6 +70,9 @@
             model.canPlay = videoAsset.isReadable;
             if (attrs[NSFileType] == NSFileTypeDirectory) {
                 model.isFolder = YES;
+            }
+            if (lastName && [lastName isEqualToString:fileName]) {
+                model.isLastPlay = YES;
             }
             [modelArray addObject:model];
         }

@@ -18,4 +18,6 @@
 
 @property (weak, nonatomic) IBOutlet UILabel *totalTimeLabel;
 
+@property (weak, nonatomic) IBOutlet UILabel *lastLabel;
+
 @end

@@ -112,6 +112,7 @@ static NSString * tableCellIndentifer = @"TableCellIndentifer";
     } else {
         cell.propertyLabel.text = [NSString stringWithFormat:@"Unsupported Type, Size:%@MB",model.size];
     }
+    cell.lastLabel.hidden = !model.isLastPlay;
     return cell;
     
 }

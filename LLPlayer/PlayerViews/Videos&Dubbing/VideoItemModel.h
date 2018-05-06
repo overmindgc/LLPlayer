@@ -26,5 +26,6 @@
 
 @property (nonatomic) BOOL canPlay;
 @property (nonatomic) BOOL isFolder;
+@property (nonatomic) BOOL isLastPlay;
 
 @end

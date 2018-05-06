@@ -18,4 +18,6 @@
 #define RecordAudioFileName         @"recordCache.aac"
 #define DubbingVideoFolder          @"LLDubbing"
 
+#define LastOpenVideoFileName       @"LastOpenVideoFileName"
+
 #endif /* ConstsMacros_h */

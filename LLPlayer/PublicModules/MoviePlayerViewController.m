@@ -105,6 +105,9 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(saveClipAction) name:LL_AUDIO_CONTROL_SAVE_CLIP object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(saveDubbingAction) name:LL_AUDIO_CONTROL_SAVE_DUBBING object:nil];
+    
+    [[NSUserDefaults standardUserDefaults] setObject:self.videoTitle forKey:LastOpenVideoFileName];
+    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 // 返回值要必须为NO
