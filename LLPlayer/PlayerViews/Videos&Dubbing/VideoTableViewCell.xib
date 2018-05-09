@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -36,7 +36,7 @@
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Video 1024x080 h264, Size:333.40MB" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Pzy-ev-ogd">
-                        <rect key="frame" x="103" y="44" width="201" height="14.5"/>
+                        <rect key="frame" x="103" y="44" width="201" height="29"/>
                         <fontDescription key="fontDescription" type="system" pointSize="12"/>
                         <color key="textColor" red="0.00044826010710000001" green="0.63604664799999999" blue="0.37164115910000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <nil key="highlightedColor"/>
@@ -47,9 +47,12 @@
                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Last" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Fkt-gJ-zBM">
-                        <rect key="frame" x="67" y="5" width="21" height="12"/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Last" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Fkt-gJ-zBM">
+                        <rect key="frame" x="64" y="5" width="28" height="12"/>
                         <color key="backgroundColor" red="1" green="0.57637232540000005" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="28" id="riL-Id-jay"/>
+                        </constraints>
                         <fontDescription key="fontDescription" type="system" pointSize="10"/>
                         <color key="textColor" red="0.99999600649999998" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <nil key="highlightedColor"/>
@@ -59,13 +62,13 @@
                     <constraint firstItem="Lrs-Yk-VxB" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="2Hj-Yy-k0n"/>
                     <constraint firstItem="DEX-9b-Ch4" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="5" id="2mi-Bh-cfK"/>
                     <constraint firstItem="DEX-9b-Ch4" firstAttribute="leading" secondItem="Lrs-Yk-VxB" secondAttribute="trailing" constant="8" id="4sd-qz-tP4"/>
+                    <constraint firstItem="Fkt-gJ-zBM" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="64" id="7Ae-of-gvI"/>
                     <constraint firstAttribute="trailing" secondItem="DEX-9b-Ch4" secondAttribute="trailing" constant="16" id="Cmc-U5-Xm0"/>
                     <constraint firstItem="Pzy-ev-ogd" firstAttribute="top" secondItem="DEX-9b-Ch4" secondAttribute="bottom" constant="-1" id="DLm-Nh-Gzd"/>
                     <constraint firstItem="Pzy-ev-ogd" firstAttribute="leading" secondItem="tA1-tj-pBV" secondAttribute="trailing" constant="15" id="GvN-ZT-6fU"/>
                     <constraint firstItem="Pzy-ev-ogd" firstAttribute="leading" secondItem="Lrs-Yk-VxB" secondAttribute="trailing" constant="8" id="NSV-wg-vMZ"/>
                     <constraint firstAttribute="trailing" secondItem="Pzy-ev-ogd" secondAttribute="trailing" constant="16" id="TPe-e8-QO5"/>
                     <constraint firstAttribute="bottom" secondItem="tA1-tj-pBV" secondAttribute="bottom" constant="3" id="Uue-r5-UEp"/>
-                    <constraint firstAttribute="trailing" secondItem="Fkt-gJ-zBM" secondAttribute="trailing" constant="232" id="drO-Xf-e6f"/>
                     <constraint firstItem="Fkt-gJ-zBM" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="5" id="hZY-7o-7r0"/>
                     <constraint firstItem="Lrs-Yk-VxB" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="5" id="qLL-MZ-JqQ"/>
                 </constraints>

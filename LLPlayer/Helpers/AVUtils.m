@@ -8,6 +8,7 @@
 
 #import "AVUtils.h"
 #import <SVProgressHUD/SVProgressHUD.h>
+#import "TimeUtils.h"
 
 @implementation AVUtils
 
@@ -20,7 +21,8 @@
         
         gen.appliesPreferredTrackTransform = YES;
         
-        CMTime time = CMTimeMakeWithSeconds(0.0, 600);
+        Float64 duration = CMTimeGetSeconds(asset.duration);
+        CMTime time = CMTimeMakeWithSeconds(duration / 3, 600);
         
         NSError *error = nil;
         
@@ -43,7 +45,7 @@
 //    AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:[NSURL fileURLWithPath:videoURL] options:nil];
     if (asset) {
         Float64 duration = CMTimeGetSeconds(asset.duration);
-        NSString *strTime=[self convertSecondToTime:duration];
+        NSString *strTime = [self convertSecondToTime:duration];
         return strTime;
     } else {
         return nil;
@@ -53,15 +55,17 @@
 //将数值转换成时间
 + (NSString *)convertSecondToTime:(CGFloat)second
 {
-    NSDate *d = [NSDate dateWithTimeIntervalSince1970:second];
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    if (second/3600 >= 1) {
-        [formatter setDateFormat:@"HH:mm:ss"];
-    } else {
-        [formatter setDateFormat:@"mm:ss"];
-    }
-    NSString *showtimeNew = [formatter stringFromDate:d];
-    return showtimeNew;
+//    NSDate *d = [NSDate dateWithTimeIntervalSince1970:second];
+//    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+//    if (second/3600 >= 1) {
+//        [formatter setDateFormat:@"HH:mm:ss"];
+//    } else {
+//        [formatter setDateFormat:@"mm:ss"];
+//    }
+//    NSString *showtimeNew = [formatter stringFromDate:d];
+//    return showtimeNew;
+    
+    return [TimeUtils getHHMMSSFromSS:second];
 }
 
 + (CGSize)getVideoSize:(AVURLAsset *)asset

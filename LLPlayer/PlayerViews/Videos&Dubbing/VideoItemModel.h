@@ -20,12 +20,12 @@
 @property (nonatomic, copy) NSString *totalTime;
 @property (nonatomic, copy) NSString *resolution;
 @property (nonatomic, copy) NSString *encoding;
+@property (nonatomic, strong) NSDate *createDate;
 
 @property (nonatomic) CGSize videoSize;
 @property (nonatomic, strong) UIImage *thumbImage;
 
 @property (nonatomic) BOOL canPlay;
 @property (nonatomic) BOOL isFolder;
-@property (nonatomic) BOOL isLastPlay;
 
 @end

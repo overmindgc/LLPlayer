@@ -19,5 +19,6 @@
 #define DubbingVideoFolder          @"LLDubbing"
 
 #define LastOpenVideoFileName       @"LastOpenVideoFileName"
+#define LastOpenVideoWatchTime      @"LastOpenVideoWatchTime"
 
 #endif /* ConstsMacros_h */

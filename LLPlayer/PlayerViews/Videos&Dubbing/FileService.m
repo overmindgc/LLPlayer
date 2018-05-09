@@ -33,7 +33,6 @@
         if (isDubbing) {
             filePath = [NSString stringWithFormat:@"%@/%@",filePath,DubbingVideoFolder];
         }
-        NSString *lastName = [[NSUserDefaults standardUserDefaults] objectForKey:LastOpenVideoFileName];
         
         NSError *error;
         // 获取指定路径对应文件夹下的所有文件
@@ -66,19 +65,25 @@
 //            model.thumbImage = [AVUtils getVideoThumbImage:videoAsset];
             CGSize videoSize = [AVUtils getVideoSize:videoAsset];
             model.videoSize = videoSize;
+            model.createDate = attrs[NSFileCreationDate];
             model.resolution = [NSString stringWithFormat:@"%0.fx%0.f",videoSize.width,videoSize.height];
             model.canPlay = videoAsset.isReadable;
             if (attrs[NSFileType] == NSFileTypeDirectory) {
                 model.isFolder = YES;
             }
-            if (lastName && [lastName isEqualToString:fileName]) {
-                model.isLastPlay = YES;
-            }
             [modelArray addObject:model];
         }
         //根据文件名升序排序
         [modelArray sortUsingComparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
-            return ((VideoItemModel *)obj1).name > ((VideoItemModel *)obj2).name;
+            VideoItemModel *model1 = (VideoItemModel *)obj1;
+            VideoItemModel *model2 = (VideoItemModel *)obj2;
+            if (model1.createDate < model2.createDate) {
+                return NSOrderedAscending;
+            } else if (model1.createDate > model2.createDate) {
+                return NSOrderedDescending;
+            }
+            return NSOrderedSame;
+//            return model1.createDate < model2.createDate;
         }];
         
         dispatch_sync(dispatch_get_main_queue(), ^{

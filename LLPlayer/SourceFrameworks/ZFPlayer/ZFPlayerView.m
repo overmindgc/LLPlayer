@@ -413,7 +413,7 @@ typedef NS_ENUM(NSInteger, PanDirection){
     [self createTimer];
     
     // 获取系统音量
-//    [self configureVolume];
+    [self configureVolume];
     
     // 本地文件不设置ZFPlayerStateBuffering状态
     if ([self.videoURL.scheme isEqualToString:@"file"]) {
@@ -482,7 +482,7 @@ typedef NS_ENUM(NSInteger, PanDirection){
 }
 
 /**
- *  获取系统音量 （配合音量加减的功能，暂时不调用）
+ *  获取系统音量 （配合音量加减的功能）
  */
 - (void)configureVolume {
     //把系统的音量控制显示移到屏幕外，达到隐藏效果

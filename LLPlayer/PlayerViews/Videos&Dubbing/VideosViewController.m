@@ -54,6 +54,7 @@ static NSString * tableCellIndentifer = @"TableCellIndentifer";
 {
     [super viewDidAppear:animated];
     NSLog(@"A viewDidAppear");
+    [self.tableView reloadData];
 }
 - (void)viewWillDisappear:(BOOL)animated
 {
@@ -112,7 +113,8 @@ static NSString * tableCellIndentifer = @"TableCellIndentifer";
     } else {
         cell.propertyLabel.text = [NSString stringWithFormat:@"Unsupported Type, Size:%@MB",model.size];
     }
-    cell.lastLabel.hidden = !model.isLastPlay;
+    NSString *lastName = [[NSUserDefaults standardUserDefaults] objectForKey:LastOpenVideoFileName];
+    cell.lastLabel.hidden = ![lastName isEqualToString:model.name];
     return cell;
     
 }
@@ -208,7 +210,7 @@ static NSString * tableCellIndentifer = @"TableCellIndentifer";
     NSURL *URL                       = [NSURL fileURLWithPath:model.path];
     movie.videoURL                   = URL;
     movie.videoTitle = model.name;
-    movie.defaultThumblImg = model.thumbImage;
+//    movie.defaultThumblImg = model.thumbImage;
 }
 
 #pragma mark actions

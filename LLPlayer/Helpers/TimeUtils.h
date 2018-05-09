@@ -15,4 +15,9 @@
  */
 + (NSString *)getMMSSFromSS:(NSInteger)seconds;
 
+/**
+ * 根据秒数返回00:00:00格式
+ */
++ (NSString *)getHHMMSSFromSS:(NSInteger)seconds;
+
 @end

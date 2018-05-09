@@ -106,6 +106,9 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(saveClipAction) name:LL_AUDIO_CONTROL_SAVE_CLIP object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(saveDubbingAction) name:LL_AUDIO_CONTROL_SAVE_DUBBING object:nil];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillResignActive:)
+                                                 name:UIApplicationWillResignActiveNotification object:nil];
+    
     [[NSUserDefaults standardUserDefaults] setObject:self.videoTitle forKey:LastOpenVideoFileName];
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
@@ -125,6 +128,19 @@
 
 - (BOOL)prefersStatusBarHidden {
     return ZFPlayerShared.isStatusBarHidden;
+}
+
+- (void)applicationWillResignActive:(NSNotification *)notification
+{
+    [self storageCurrPlayTime];
+}
+
+- (void)storageCurrPlayTime
+{
+    double currPlayTime = [self.playerView getCurrentPlayTime];
+    NSLog(@"currPlayTime：%f",currPlayTime);
+    [[NSUserDefaults standardUserDefaults] setDouble:currPlayTime forKey:LastOpenVideoWatchTime];
+    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 #pragma mark - ZFPlayerDelegate
@@ -163,6 +179,14 @@
         //        _playerModel.resolutionDic = @{@"高清" : self.videoURL.absoluteString,
         //                                       @"标清" : self.videoURL.absoluteString};
         _playerModel.isEnableSubTitleMask = YES;
+        
+        NSString *lastFileName = [[NSUserDefaults standardUserDefaults] stringForKey:LastOpenVideoFileName];
+        if (lastFileName && [self.videoTitle isEqualToString:lastFileName]) {
+            double lastPlayTime = [[NSUserDefaults standardUserDefaults] doubleForKey:LastOpenVideoWatchTime];
+            if (lastPlayTime > 0) {
+                _playerModel.seekTime = lastPlayTime;
+            }
+        }
     }
     return _playerModel;
 }
@@ -338,6 +362,7 @@
 }
 
 - (IBAction)backClick {
+    [self storageCurrPlayTime];
     [self.navigationController popViewControllerAnimated:YES];
 }
 

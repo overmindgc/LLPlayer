@@ -8,7 +8,7 @@
 
 #import "MainNavViewController.h"
 
-@interface MainNavViewController ()
+@interface MainNavViewController () <UIGestureRecognizerDelegate>
 
 @end
 
@@ -20,11 +20,17 @@
     //标题白色
     NSDictionary *dict = [NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:NSForegroundColorAttributeName];
     self.navigationBar.titleTextAttributes = dict;
+    self.interactivePopGestureRecognizer.delegate = self;
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
+{
+    return NO;
 }
 
 //- (UIStatusBarStyle)preferredStatusBarStyle{
