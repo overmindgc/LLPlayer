@@ -858,6 +858,8 @@ typedef NS_ENUM(NSInteger, PanDirection){
  *  @param orientation 屏幕方向
  */
 - (void)interfaceOrientation:(UIInterfaceOrientation)orientation {
+    //适配iOS13先禁用手动转屏
+    return;
     if (orientation == UIInterfaceOrientationLandscapeRight || orientation == UIInterfaceOrientationLandscapeLeft) {
         // 设置横屏
         [self setOrientationLandscapeConstraint:orientation];
@@ -1817,13 +1819,16 @@ typedef NS_ENUM(NSInteger, PanDirection){
     if (ZFPlayerShared.isLockScreen) {
         [self unLockTheScreen];
     } else {
-        if (!self.isFullScreen) {
-            // player加到控制器上，只有一个player时候
-            [self pause];
-            if ([self.delegate respondsToSelector:@selector(zf_playerBackAction)]) { [self.delegate zf_playerBackAction]; }
-        } else {
-            [self interfaceOrientation:UIInterfaceOrientationPortrait];
-        }
+        [self pause];
+        if ([self.delegate respondsToSelector:@selector(zf_playerBackAction)]) { [self.delegate zf_playerBackAction]; }
+        
+//        if (!self.isFullScreen) {
+//            // player加到控制器上，只有一个player时候
+//            [self pause];
+//            if ([self.delegate respondsToSelector:@selector(zf_playerBackAction)]) { [self.delegate zf_playerBackAction]; }
+//        } else {
+//            [self interfaceOrientation:UIInterfaceOrientationPortrait];
+//        }
     }
 }
 
